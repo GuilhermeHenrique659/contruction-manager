@@ -92,6 +92,8 @@ Este `AGENTS.md` é o resumo executivo; os documentos em `docs/` têm a versão 
 - Não commitar `.env`, `node_modules`, builds (`dist/`, `client/dist`) ou credenciais.
 - Não quebrar o padrão de monolito (ex.: não criar um segundo serviço/deploy separado para o frontend).
 
+- Skill ativa para fluxo de implementação: `.skills/feature-flow.md` (esqueleto → testes → roda → implementação → roda → lint/build).
+
 ## Status atual
 
 Projeto em fase de scaffolding inicial. Estrutura de pastas criada; dependências, configuração do Drizzle, auth JWT e build integrado ainda em implementação.

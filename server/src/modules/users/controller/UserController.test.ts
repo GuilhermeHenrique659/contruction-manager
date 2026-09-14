@@ -23,7 +23,6 @@ describe('Register endpoint', () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: 'New User', email: 'new4@test.com', password: '123456' }),
         });
-        console.log('Register response:', { status, body });
         assert.strictEqual(status, 200);
         assert.ok(body);
     });

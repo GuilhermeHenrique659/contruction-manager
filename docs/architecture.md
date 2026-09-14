@@ -29,9 +29,9 @@ server/
 ├── src/
 │   ├── main.ts                     # entrypoint, monta o Express, registra módulos
 │   ├── shared/                     # kernel e infraestrutura cross-cutting
-  │   │   ├── kernel/                 # base classes (AggregateRoot, DomainEvent)
+│   │   ├── domain/                 # base classes (DomainError, Id, etc.) — kernel/ ainda não implementado
 │   │   ├── infra/
-  │   │   │   ├── db/                 # client Drizzle, schema, migrations
+│   │   │   ├── db/                 # client Drizzle, schema, migrations
 │   │   │   └── http/               # setup do Express, error handler, middleware de auth (JWT)
 │   │   └── config/                 # env.ts (única porta de acesso a process.env)
 │   └── modules/
@@ -219,7 +219,7 @@ export class GetObraById {
 
 - PostgreSQL via Drizzle ORM.
 - **Conexão com o banco**: Utilizar pool de conexões e reutilizar o pool ao longo da aplicação, evitando criar e fechar conexões repetidamente. A conexão deve ser estabelecida uma vez e compartilhada entre as operações.
-- Entidades de negócio (Obra, Compra, Fornecedor, Categoria etc.) ainda não estão modeladas — serão definidas com o usuário antes de implementar qualquer módulo.
+- Entidades de negócio: modelo definido em `docs/database-model.md` (users, projects, vendors, categories, items, orders, project_members), mas ainda não totalmente implementado no código — apenas `users` está modelado no banco (`shared/infra/db/schema/users.ts`).
 
 ## Arquitetura de testes (pirâmide)
 
@@ -264,5 +264,6 @@ Três níveis, todos seguindo o padrão **given / when / then**, focados em desc
 
 - Modelagem de entidades de negócio (Obra, Compra, Fornecedor, Categoria de gasto etc.) e definição dos bounded contexts do sistema.
 - Estratégia de autorização mais granular (ex.: usuário só vê obras às quais tem acesso) — depende da modelagem acima.
-- Biblioteca de validação de payload nos controllers (ex.: zod) — sugerido, ainda não decidido formalmente.
+- Biblioteca de validação de payload nos controllers: `zod` já está em uso (`ValidateInput`, `UserController`).
+- Middleware de auth JWT (`shared/infra/http`): ainda não implementado; rotas públicas (`/auth/login`, `/auth/register`) existem sem auth no momento.
 - Mecanismo concreto de domain events (in-process vs. fila) — a definir quando houver o primeiro caso de uso real.

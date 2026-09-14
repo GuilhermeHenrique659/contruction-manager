@@ -85,7 +85,8 @@ export class ObraJaEncerradaError extends Error { ... }
 ### Regras transversais
 
 - Toda variável de ambiente é lida em `shared/config/env.ts` e validada na inicialização. Nunca `process.env.X` direto em outro arquivo.
-- Toda rota autenticada usa o middleware de auth JWT (`shared/infra/http`) — nunca reimplementar verificação de token num controller.
+- Validação de payload: `zod` em uso (`ValidateInput` no `shared/infra/http`).
+- Toda rota autenticada usa o middleware de auth JWT (`shared/infra/http`) — ainda não implementado; rotas públicas (`/auth/login`, `/auth/register`) existem sem auth no momento.
 - Erros de domínio são classes de erro específicas (ex.: `ObraJaEncerradaError`), lançadas pelo `domain/` e tratadas no error handler central — controllers não fazem `try/catch` genérico para montar resposta de erro.
 - Um módulo nunca importa `domain/` ou `repository/` de outro módulo diretamente.
 
