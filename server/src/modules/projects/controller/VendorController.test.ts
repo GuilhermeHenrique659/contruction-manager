@@ -7,7 +7,7 @@ import { fetchApp } from '../../../shared/test/testHelper.js';
 import { generateTestToken } from '../../../shared/test/authHelper.js';
 
 let app: express.Application;
-let fetchAppInst: Awaited<ReturnType<typeof import('../../../shared/test/testHelper.js').fetchApp>>;
+let fetchAppInst: Awaited<ReturnType<typeof fetchApp>>;
 
 before(async () => {
     app = createApp();
