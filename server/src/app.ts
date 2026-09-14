@@ -3,6 +3,7 @@ import cors from 'cors';
 import pino from 'pino';
 import { userRouter } from './modules/users/controller/UserController.js';
 import { projectRouter } from './modules/projects/controller/ProjectController.js';
+import { vendorRouter } from './modules/projects/controller/VendorController.js';
 import { DomainError } from './shared/domain/DomainError.js';
 import { ApplicationError } from './shared/domain/ApplicationError.js';
 import { AuthenticationError } from './modules/users/domain/AuthenticationError.js';
@@ -17,6 +18,7 @@ export function createApp() {
     const routes = new Map<string, express.Router>();
     routes.set('users', userRouter);
     routes.set('projects', projectRouter);
+    routes.set('vendors', vendorRouter);
 
     for (const [prefix, router] of routes) {
         app.use(`/api/${prefix}`, router);
