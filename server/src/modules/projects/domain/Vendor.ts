@@ -1,9 +1,10 @@
 import { Id } from '../../../shared/domain/Id.js';
+import { DayOfMonth } from './DayOfMonth.js';
 
 type Props = {
   id: Id;
   name: string;
-  paymentDay: number | null;
+  paymentDay: DayOfMonth | null;
   projectId: Id;
 };
 
@@ -31,11 +32,21 @@ export class Vendor {
         return this._props.name;
     }
 
-    get paymentDay(): number | null {
+    get paymentDay(): DayOfMonth | null {
         return this._props.paymentDay;
     }
 
     get projectId(): string {
         return this._props.projectId.toString();
+    }
+
+    updateName(name?: string): void {
+        if (name === undefined) return;
+        this._props.name = name;
+    }
+
+    updatePaymentDay(paymentDay?: number | null): void {
+        if (paymentDay === undefined) return;
+        this._props.paymentDay = paymentDay !== null ? new DayOfMonth(paymentDay) : null;
     }
 }

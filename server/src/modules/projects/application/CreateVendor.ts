@@ -1,5 +1,6 @@
 import { Id } from '../../../shared/domain/Id.js';
 import { Vendor } from '../domain/Vendor.js';
+import { DayOfMonth } from '../domain/DayOfMonth.js';
 import type { VendorRepository } from '../repository/VendorRepository.js';
 
 type Input = {
@@ -23,7 +24,7 @@ export class CreateVendor {
 
         const vendor = Vendor.create({
             name: input.name,
-            paymentDay: input.paymentDay,
+            paymentDay: input.paymentDay !== null ? new DayOfMonth(input.paymentDay) : null,
             projectId: Id.fromString(input.projectId),
         });
 
