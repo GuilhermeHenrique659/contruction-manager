@@ -27,6 +27,23 @@ describe('Project endpoint validation', () => {
     });
 });
 
+describe('Project vendors list', () => {
+    it('given project with vendors when list then returns vendors', async () => {
+        const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'List User', email: 'list@test.com', password: '123456' });
+        const userId = userRes.body.id;
+
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { description: 'List Project', creatorUserId: userId });
+        const projectId = projRes.body.id;
+
+        await fetchAppInst.post('/api/vendors/', { auth: generateTestToken() }, { name: 'List Vendor', paymentDay: 5, projectId: projectId });
+
+        const { status, body } = await fetchAppInst.get(`/api/projects/${projectId}/vendors`, { auth: generateTestToken() });
+        assert.strictEqual(status, 200);
+        assert.strictEqual(Array.isArray(body), true);
+        assert.strictEqual(body.length >= 1, true);
+    });
+});
+
 describe('Project endpoint', () => {
     it('given valid payload when create then returns project id', async () => {
         const { status, body } = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { description: 'Teste', creatorUserId: '00000000-0000-0000-0000-000000000001' });
