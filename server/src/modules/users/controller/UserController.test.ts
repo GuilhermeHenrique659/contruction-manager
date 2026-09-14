@@ -15,15 +15,12 @@ before(async () => {
 
 after(async () => {
     await closePool();
+    await fetchAppInst.close();
 });
 
 describe('Register endpoint', () => {
     it('given new user when register then returns user', async () => {
-        const { status, body } = await fetchAppInst('/api/users/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: 'New User', email: 'new4@test.com', password: '123456' }),
-        });
+        const { status, body } = await fetchAppInst.post('/api/users/register', {}, { name: 'New User', email: 'new4@test.com', password: '123456' });
         assert.strictEqual(status, 200);
         assert.ok(body);
     });
@@ -31,11 +28,7 @@ describe('Register endpoint', () => {
 
 describe('Register endpoint validation', () => {
     it('given invalid payload when register then returns bad request', async () => {
-        const { status, body } = await fetchAppInst('/api/users/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: 'bad@test.com' }),
-        });
+        const { status, body } = await fetchAppInst.post('/api/users/register', {}, { email: 'bad@test.com' });
         assert.strictEqual(status, 400);
         assert.strictEqual(body.error, 'invalid payload');
     });
@@ -43,17 +36,9 @@ describe('Register endpoint validation', () => {
 
 describe('Login endpoint', () => {
     it('given registered user when login then returns token', async () => {
-        await fetchAppInst('/api/users/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: 'Login User', email: 'login@test.com', password: '123456' }),
-        });
+        await fetchAppInst.post('/api/users/register', {}, { name: 'Login User', email: 'login@test.com', password: '123456' });
 
-        const { status, body } = await fetchAppInst('/api/users/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: 'login@test.com', password: '123456' }),
-        });
+        const { status, body } = await fetchAppInst.post('/api/users/login', {}, { email: 'login@test.com', password: '123456' });
 
         assert.strictEqual(status, 200);
         assert.ok(body && body.token);

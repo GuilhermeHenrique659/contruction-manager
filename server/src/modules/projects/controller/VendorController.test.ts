@@ -16,61 +16,33 @@ before(async () => {
 
 after(async () => {
     await closePool();
+    await fetchAppInst.close();
 });
 
 describe('Vendor endpoint', () => {
     it('given valid payload when create then returns vendor id', async () => {
-        const userRes = await fetchAppInst('/api/users/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: 'Test User', email: 'vendor@test.com', password: '123456' }),
-        });
+        const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Test User', email: 'vendor@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst('/api/projects/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + generateTestToken() },
-            body: JSON.stringify({ description: 'Test Project', creatorUserId: userId }),
-        });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { description: 'Test Project', creatorUserId: userId });
         const projectId = projRes.body.id;
 
-        const { status, body } = await fetchAppInst('/api/vendors/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + generateTestToken() },
-            body: JSON.stringify({ name: 'Teste Vendor', paymentDay: 15, projectId: projectId }),
-        });
+        const { status, body } = await fetchAppInst.post('/api/vendors/', { auth: generateTestToken() }, { name: 'Teste Vendor', paymentDay: 15, projectId: projectId });
 
         assert.strictEqual(status, 200);
         assert.ok(body && body.id);
     });
 
     it('given valid payload when update then returns vendor id', async () => {
-        const userRes = await fetchAppInst('/api/users/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: 'Update User', email: 'vendorupdate@test.com', password: '123456' }),
-        });
+        const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Update User', email: 'vendorupdate@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst('/api/projects/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + generateTestToken() },
-            body: JSON.stringify({ description: 'Update Project', creatorUserId: userId }),
-        });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { description: 'Update Project', creatorUserId: userId });
         const projectId = projRes.body.id;
 
-        const createRes = await fetchAppInst('/api/vendors/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + generateTestToken() },
-            body: JSON.stringify({ name: 'Old Name', paymentDay: 10, projectId: projectId }),
-        });
+        const createRes = await fetchAppInst.post('/api/vendors/', { auth: generateTestToken() }, { name: 'Old Name', paymentDay: 10, projectId: projectId });
         const vendorId = createRes.body.id;
-
-        const { status, body } = await fetchAppInst(`/api/vendors/${vendorId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + generateTestToken() },
-            body: JSON.stringify({ name: 'New Name', paymentDay: 20 }),
-        });
+        const { status, body } = await fetchAppInst.put(`/api/vendors/${vendorId}`, { auth: generateTestToken() }, { name: 'New Name', paymentDay: 20 });
 
         assert.strictEqual(status, 200);
         assert.strictEqual(body.id, vendorId);

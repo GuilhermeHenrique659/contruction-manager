@@ -3,7 +3,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
@@ -21,9 +21,9 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "useDefineForClassFields": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
     "removeComments": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -38,6 +38,7 @@
     "node_modules",
     "dist",
     "*.test.ts",
+    "*.tests.ts",
     "*.spec.ts"
   ]
 }

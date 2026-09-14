@@ -8,6 +8,6 @@ describe('validateInput', () => {
         const req = { body: { email: 123 } } as unknown;
         const res = { status: () => ({ json: () => {} }) } as unknown;
         const middleware = validateInput(z.object({ email: z.string() }));
-        assert.throws(() => middleware(req, res, () => {}), /invalid payload/);
+        assert.throws(() => middleware(req as any, res as any, () => {}), /invalid payload/);
     });
 });

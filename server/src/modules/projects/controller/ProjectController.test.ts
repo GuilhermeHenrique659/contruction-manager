@@ -16,15 +16,12 @@ before(async () => {
 
 after(async () => {
     await closePool();
+    await fetchAppInst.close();
 });
 
 describe('Project endpoint validation', () => {
     it('given invalid payload when create then returns bad request', async () => {
-        const { status, body } = await fetchAppInst('/api/projects/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + generateTestToken() },
-            body: JSON.stringify({ creatorUserId: 'u1' }),
-        });
+        const { status, body } = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { creatorUserId: 'u1' });
         assert.strictEqual(status, 400);
         assert.strictEqual(body.error, 'invalid payload');
     });
@@ -32,11 +29,7 @@ describe('Project endpoint validation', () => {
 
 describe('Project endpoint', () => {
     it('given valid payload when create then returns project id', async () => {
-        const { status, body } = await fetchAppInst('/api/projects/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + generateTestToken() },
-            body: JSON.stringify({ description: 'Teste', creatorUserId: '00000000-0000-0000-0000-000000000001' }),
-        });
+        const { status, body } = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { description: 'Teste', creatorUserId: '00000000-0000-0000-0000-000000000001' });
 
         console.log('Response body:', body);
         assert.strictEqual(status, 200);

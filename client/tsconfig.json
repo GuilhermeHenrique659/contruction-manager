@@ -6,7 +6,7 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": false,
+    "noEmit": true,
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
@@ -40,6 +40,7 @@
     "node_modules",
     "dist",
     "*.test.ts",
+    "*.tests.ts",
     "*.spec.ts"
   ]
 }

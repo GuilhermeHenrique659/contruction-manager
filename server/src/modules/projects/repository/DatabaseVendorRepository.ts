@@ -1,16 +1,19 @@
-import { type Vendor } from '../domain/Vendor.js';
+import { Vendor } from '../domain/Vendor.js';
 import { type VendorRepository } from './VendorRepository.js';
 import { vendors } from '../../../shared/infra/db/schema/projects.js';
 import { eq, and } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { Id } from '../../../shared/domain/Id.js';
+import { DayOfMonth } from '../domain/DayOfMonth.js';
 
 export class DatabaseVendorRepository implements VendorRepository {
-    constructor(private readonly tx: NodePgDatabase) {}
+    constructor(private readonly tx: NodePgDatabase) { }
 
     async getById(id: string): Promise<Vendor | null> {
-        const rows = await this.tx.select().from(vendors).where(eq(vendors.id, id));
-        if (!rows.length) return null;
-        return null;
+        const [row] = await this.tx.select().from(vendors).where(eq(vendors.id, id));
+
+        if (!row) return null;
+        return new Vendor({ id: Id.fromString(row.id), name: row.name, paymentDay: row.paymentDay ? new DayOfMonth(row.paymentDay) : null, projectId: Id.fromString(row.projectId) });
     }
 
     async hasByNameAndProject(name: string, projectId: string): Promise<boolean> {

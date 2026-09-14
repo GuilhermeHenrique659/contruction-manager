@@ -11,7 +11,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     const token = header.replace('Bearer ', '');
     try {
         const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
-        (req as unknown).user = decoded;
+        (req as any).user = decoded;
         next();
     } catch (e) {
         res.status(401).json({ error: 'Invalid token' });
