@@ -1,3 +1,4 @@
+import { Id } from '../../../shared/domain/Id.js';
 import { Vendor } from '../domain/Vendor.js';
 import type { VendorRepository } from '../repository/VendorRepository.js';
 
@@ -23,7 +24,7 @@ export class CreateVendor {
         const vendor = Vendor.create({
             name: input.name,
             paymentDay: input.paymentDay,
-            projectId: input.projectId,
+            projectId: Id.fromString(input.projectId),
         });
 
         await this.repo.add(vendor);
