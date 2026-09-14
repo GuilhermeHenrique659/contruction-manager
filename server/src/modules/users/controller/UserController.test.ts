@@ -1,11 +1,12 @@
+import express from 'express';
 import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert';
 import { createApp } from '../../../app.js';
 import { closePool } from '../../../shared/infra/db/pool.js';
 import { fetchApp } from '../../../shared/test/testHelper.js';
 
-let app: unknown;
-let fetchAppInst: unknown;
+let app: express.Application;
+let fetchAppInst: Awaited<ReturnType<typeof fetchApp>>;
 
 before(async () => {
     app = createApp();

@@ -20,10 +20,24 @@ after(async () => {
 
 describe('Vendor endpoint', () => {
     it('given valid payload when create then returns vendor id', async () => {
+        const userRes = await fetchAppInst('/api/users/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: 'Test User', email: 'vendor@test.com', password: '123456' }),
+        });
+        const userId = userRes.body.id;
+
+        const projRes = await fetchAppInst('/api/projects/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + generateTestToken() },
+            body: JSON.stringify({ description: 'Test Project', creatorUserId: userId }),
+        });
+        const projectId = projRes.body.id;
+
         const { status, body } = await fetchAppInst('/api/vendors/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + generateTestToken() },
-            body: JSON.stringify({ name: 'Teste Vendor', paymentDay: 15, projectId: '00000000-0000-0000-0000-000000000001' }),
+            body: JSON.stringify({ name: 'Teste Vendor', paymentDay: 15, projectId: projectId }),
         });
 
         assert.strictEqual(status, 200);
