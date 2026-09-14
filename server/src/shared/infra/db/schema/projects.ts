@@ -1,9 +1,16 @@
-import { pgTable, uuid, varchar, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, primaryKey, integer } from 'drizzle-orm/pg-core';
 import { users } from './users';
 
 export const projects = pgTable('projects', {
     id: uuid('id').primaryKey(),
     description: varchar('description', { length: 255 }).notNull(),
+});
+
+export const vendors = pgTable('vendors', {
+    id: uuid('id').primaryKey(),
+    name: varchar('name', { length: 255 }).notNull(),
+    paymentDay: integer('payment_day'),
+    projectId: uuid('project_id').notNull().references(() => projects.id),
 });
 
 export const projectMembers = pgTable('project_members', {

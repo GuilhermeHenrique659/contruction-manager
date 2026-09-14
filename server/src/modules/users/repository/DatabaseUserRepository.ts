@@ -7,7 +7,7 @@ import { users } from '../../../shared/infra/db/schema/users.js';
 
 
 export class DatabaseUserRepository implements UserRepository {
-    constructor(private readonly tx: PgTransaction<any, any, any>) {}
+    constructor(private readonly tx: PgTransaction<unknown, unknown, unknown>) {}
 
     async getByEmail(email: string): Promise<User | null> {
         const [row] = await this.tx.select().from(users).where(eq(users.email, email)).limit(1);

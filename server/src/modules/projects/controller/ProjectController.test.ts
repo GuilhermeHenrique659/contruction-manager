@@ -5,8 +5,8 @@ import { closePool } from '../../../shared/infra/db/pool.js';
 import { fetchApp } from '../../../shared/test/testHelper.js';
 import { generateTestToken } from '../../../shared/test/authHelper.js';
 
-let app: any;
-let fetchAppInst: any;
+let app: unknown;
+let fetchAppInst: unknown;
 
 before(async () => {
     app = createApp();

@@ -1,7 +1,7 @@
-export async function fetchApp(app: any) {
+export async function fetchApp(app: unknown) {
     return async (path: string, init?: RequestInit) => {
         const server = app.listen(0);
-        const port = (server.address() as any).port;
+        const port = (server.address() as unknown).port;
         const url = `http://localhost:${port}${path}`;
         const res = await fetch(url, init);
         const body = await res.json().catch(() => ({}));
