@@ -24,10 +24,10 @@ describe('Vendor endpoint', () => {
         const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Test User', email: 'vendor@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { description: 'Test Project', creatorUserId: userId });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'Test Project' });
         const projectId = projRes.body.id;
 
-        const { status, body } = await fetchAppInst.post('/api/vendors/', { auth: generateTestToken() }, { name: 'Teste Vendor', paymentDay: 15, projectId: projectId });
+        const { status, body } = await fetchAppInst.post('/api/vendors/', { auth: generateTestToken(userId) }, { name: 'Teste Vendor', paymentDay: 15, projectId: projectId });
 
         assert.strictEqual(status, 200);
         assert.ok(body && body.id);
@@ -37,12 +37,12 @@ describe('Vendor endpoint', () => {
         const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Update User', email: 'vendorupdate@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { description: 'Update Project', creatorUserId: userId });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'Update Project' });
         const projectId = projRes.body.id;
 
-        const createRes = await fetchAppInst.post('/api/vendors/', { auth: generateTestToken() }, { name: 'Old Name', paymentDay: 10, projectId: projectId });
+        const createRes = await fetchAppInst.post('/api/vendors/', { auth: generateTestToken(userId) }, { name: 'Old Name', paymentDay: 10, projectId: projectId });
         const vendorId = createRes.body.id;
-        const { status, body } = await fetchAppInst.put(`/api/vendors/${vendorId}`, { auth: generateTestToken() }, { name: 'New Name', paymentDay: 20 });
+        const { status, body } = await fetchAppInst.put(`/api/vendors/${vendorId}`, { auth: generateTestToken(userId) }, { name: 'New Name', paymentDay: 20 });
 
         assert.strictEqual(status, 200);
         assert.strictEqual(body.id, vendorId);

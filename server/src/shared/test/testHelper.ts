@@ -8,7 +8,7 @@ export class FetchAppInstance {
 
     constructor(private app: unknown) {}
 
-    private async init() {
+    async init() {
         if (this.baseUrl) return;
         const app = this.app as Application;
         const server = app.listen(0);
@@ -18,7 +18,6 @@ export class FetchAppInstance {
     }
 
     private async request(path: string, method: string, opts?: { auth?: string }, body?: unknown) {
-        await this.init();
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (opts?.auth) {
             headers['Authorization'] = 'Bearer ' + opts.auth;
@@ -56,5 +55,7 @@ export class FetchAppInstance {
 }
 
 export async function fetchApp(app: unknown) {
-    return new FetchAppInstance(app);
+    const instance = new FetchAppInstance(app);
+    await instance.init();
+    return instance;
 }

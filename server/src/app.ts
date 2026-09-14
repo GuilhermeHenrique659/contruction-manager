@@ -15,16 +15,23 @@ export function createApp() {
     app.use(cors());
     app.use(express.json());
 
+    const logger = pino({ level: 'info' }, pino.transport({ target: 'pino-pretty', options: { colorize: true } }));
+
+    app.use((req, _res, next) => {
+        logger.info(`${req.method} ${req.path}`);
+        next();
+    });
+
     const routes = new Map<string, express.Router>();
     routes.set('users', userRouter);
     routes.set('projects', projectRouter);
     routes.set('vendors', vendorRouter);
 
     for (const [prefix, router] of routes) {
+        logger.info(`Registering route: /api/${prefix}`);
         app.use(`/api/${prefix}`, router);
     }
 
-    const logger = pino({ level: 'error' });
     app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
         logger.error(err);
         if (err instanceof InvalidPayloadError) {

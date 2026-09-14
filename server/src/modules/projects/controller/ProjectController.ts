@@ -5,6 +5,7 @@ import express from 'express';
 import { db } from '../../../shared/infra/db/client.js';
 import { CreateProject } from '../application/CreateProject.js';
 import { ListVendors } from '../application/ListVendors.js';
+import { ListProjects } from '../application/ListProjects.js';
 import { DatabaseProjectRepository } from '../repository/DatabaseProjectRepository.js';
 
 export const projectRouter = express.Router();
@@ -15,11 +16,17 @@ projectRouter.get('/:projectId/vendors', authMiddleware, async (req, res) => {
     res.json(result);
 });
 
-projectRouter.post('/', authMiddleware, validateInput(z.object({ description: z.string(), creatorUserId: z.string() })), async (req, res) => {
+projectRouter.get('/', authMiddleware, async (req, res) => {
+    const useCase = new ListProjects(db);
+    const result = await useCase.execute({ userId: (req as any).user.id });
+    res.json(result);
+});
+
+projectRouter.post('/', authMiddleware, validateInput(z.object({ description: z.string() })), async (req, res) => {
     const result = await db.transaction(async (tx) => {
         const repo = new DatabaseProjectRepository(tx);
         const useCase = new CreateProject(repo);
-        return await useCase.execute(req.body);
+        return await useCase.execute({ description: req.body.description, creatorUserId: (req as any).user.id });
     });
     res.json(result);
 });

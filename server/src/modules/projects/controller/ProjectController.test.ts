@@ -21,7 +21,9 @@ after(async () => {
 
 describe('Project endpoint validation', () => {
     it('given invalid payload when create then returns bad request', async () => {
-        const { status, body } = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { creatorUserId: 'u1' });
+        const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Invalid', email: 'invalid@test.com', password: '123456' });
+        const userId = userRes.body.id;
+        const { status, body } = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, {});
         assert.strictEqual(status, 400);
         assert.strictEqual(body.error, 'invalid payload');
     });
@@ -32,21 +34,40 @@ describe('Project vendors list', () => {
         const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'List User', email: 'list@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { description: 'List Project', creatorUserId: userId });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'List Project' });
         const projectId = projRes.body.id;
 
-        await fetchAppInst.post('/api/vendors/', { auth: generateTestToken() }, { name: 'List Vendor', paymentDay: 5, projectId: projectId });
+        await fetchAppInst.post('/api/vendors/', { auth: generateTestToken(userId) }, { name: 'List Vendor', paymentDay: 5, projectId: projectId });
 
-        const { status, body } = await fetchAppInst.get(`/api/projects/${projectId}/vendors`, { auth: generateTestToken() });
+        const { status, body } = await fetchAppInst.get(`/api/projects/${projectId}/vendors`, { auth: generateTestToken(userId) });
         assert.strictEqual(status, 200);
         assert.strictEqual(Array.isArray(body), true);
         assert.strictEqual(body.length >= 1, true);
     });
 });
 
+describe('Project list', () => {
+    it('given user member when list projects then returns projects with members', async () => {
+        const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Member User', email: 'member@test.com', password: '123456' });
+        const userId = userRes.body.id;
+
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'Project with members' });
+        const projectId = projRes.body.id;
+
+        const { status, body } = await fetchAppInst.get('/api/projects/', { auth: generateTestToken(userId) });
+        assert.strictEqual(status, 200);
+        assert.strictEqual(Array.isArray(body), true);
+        assert.ok(body.some((p: any) => p.id === projectId));
+        assert.ok(body.find((p: any) => p.id === projectId).members.length >= 1);
+    });
+});
+
 describe('Project endpoint', () => {
     it('given valid payload when create then returns project id', async () => {
-        const { status, body } = await fetchAppInst.post('/api/projects/', { auth: generateTestToken() }, { description: 'Teste', creatorUserId: '00000000-0000-0000-0000-000000000001' });
+        const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'create project User', email: 'create_project@test.com', password: '123456' });
+        const userId = userRes.body.id;
+
+        const { status, body } = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'Teste' });
 
         console.log('Response body:', body);
         assert.strictEqual(status, 200);
