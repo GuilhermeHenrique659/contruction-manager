@@ -29,9 +29,9 @@ server/
 ├── src/
 │   ├── main.ts                     # entrypoint, monta o Express, registra módulos
 │   ├── shared/                     # kernel e infraestrutura cross-cutting
-│   │   ├── kernel/                 # UnitOfWork (interface), AggregateRoot base, DomainEvent base
+  │   │   ├── kernel/                 # base classes (AggregateRoot, DomainEvent)
 │   │   ├── infra/
-│   │   │   ├── db/                 # client Drizzle, schema, migrations, implementação de UnitOfWork
+  │   │   │   ├── db/                 # client Drizzle, schema, migrations
 │   │   │   └── http/               # setup do Express, error handler, middleware de auth (JWT)
 │   │   └── config/                 # env.ts (única porta de acesso a process.env)
 │   └── modules/
@@ -47,7 +47,7 @@ server/
 
 Cada bounded context é autocontido: um módulo não importa `domain/` ou `repository/` de outro módulo diretamente. Comunicação entre módulos, quando necessária, acontece via `application/` (use case chamando outro use case) ou via domain events — nunca acessando o domínio interno de outro módulo.
 
-A distinção entre write e read dentro de `application/` é **lógica**, não física: dá para saber o "lado" de um use case pelas dependências que ele usa (um use case de escrita usa `repository/` + `domain/` + `UnitOfWork`; um use case de leitura usa `query/` + `assembler/` e nada de transação).
+A distinção entre write e read dentro de `application/` é **lógica**, não física: dá para saber o "lado" de um use case pelas dependências que ele usa (um use case de escrita usa `repository/` + `domain/`; um use case de leitura usa `query/` + `assembler/` e nada de transação).
 
 ## Modelo de escrita (write)
 
@@ -59,7 +59,6 @@ A distinção entre write e read dentro de `application/` é **lógica**, não f
 - A classe implementa um método `execute(input: Input): Promise<Output>`.
 - `Input` e `Output` são tipos definidos no mesmo arquivo do use case (não em um arquivo `dto.ts` separado). Sempre nomeados literalmente `Input` e `Output`.
 - O use case:
-  - Gerencia transação usando o padrão **Unit of Work** (interface definida em `shared/kernel`, implementação concreta com Drizzle em `shared/infra/db`).
   - Orquestra a regra de negócio entre `repository/` e `domain/`.
   - Contém **apenas regra de nível de aplicação** (ex.: "carregar agregado, chamar método de domínio, persistir, publicar evento"). Regra de negócio de fato mora no `domain/`.
 
@@ -75,19 +74,14 @@ type Output = {
 };
 
 export class CreateObra {
-  constructor(
-    private readonly obraRepository: ObraRepository,
-    private readonly unitOfWork: UnitOfWork,
-  ) {}
+  constructor(private readonly obraRepository: ObraRepository) {}
 
   async execute(input: Input): Promise<Output> {
-    return this.unitOfWork.run(async () => {
-      const obra = Obra.create({ nome: input.nome, endereco: input.endereco });
+    const obra = Obra.create({ nome: input.nome, endereco: input.endereco });
 
-      await this.obraRepository.add(obra);
+    await this.obraRepository.add(obra);
 
-      return { id: obra.id };
-    });
+    return { id: obra.id };
   }
 }
 ```
@@ -142,12 +136,12 @@ type Props = {
 export class Obra {
   private readonly _props: Props;
 
-  private constructor(props: Props) {
+  constructor(props: Props) {
     this._props = props;
   }
 
-  static create(props: Omit<Props, "status">): Obra {
-    return new Obra({ ...props, status: "ativa" });
+  static create(props: Omit<Props, 'status'>): Obra {
+    return new Obra({ ...props, status: 'ativa' });
   }
 
   encerrar(): void {
@@ -182,7 +176,7 @@ O modelo de leitura é intencionalmente mais simples — não existe agregado, n
 ### `application/` (use cases de leitura)
 
 - Use cases de leitura seguem o mesmo formato `execute(input: Input): Promise<Output>`, com `Input`/`Output` definidos no arquivo.
-- Diferença chave: o use case de leitura **implementa a query diretamente** (não delega para um repositório de agregado) e **não gerencia transação/Unit of Work**, pois nunca escreve no banco.
+- Diferença chave: o use case de leitura **implementa a query diretamente** (não delega para um repositório de agregado) e **não gerencia transação**, pois nunca escreve no banco.
 - **Nunca importa/usa `repository/`**. Repositório é exclusivo do lado de escrita; leitura sempre passa por `query/` + `assembler/`.
 
 ```ts
@@ -215,12 +209,6 @@ export class GetObraById {
 ### `assembler/`
 
 - Responsável por montar e transformar os dados retornados da query no formato de `Output` do use case (mapeamento de coluna do banco → shape da API, agregações simples, formatação).
-
-## Unit of Work
-
-- Interface definida em `shared/kernel` (ex.: `UnitOfWork.run(work: () => Promise<T>): Promise<T>`).
-- Implementação concreta em `shared/infra/db`, usando transação do Drizzle.
-- Usado **apenas** pelos use cases de escrita (dentro de `application/`). Use cases de leitura nunca usam Unit of Work.
 
 ## Autenticação
 
@@ -269,7 +257,7 @@ Três níveis, todos seguindo o padrão **given / when / then**, focados em desc
 | Autenticação | JWT |
 | Runtime | Node.js LTS ativo |
 | Arquitetura backend | CQRS + DDD, módulos por bounded context; write/read são modelos lógicos dentro do mesmo módulo (não pastas separadas) |
-| Padrão de transação (write) | Unit of Work |
+| Padrão de transação (write) | `db.transaction` no controller |
 | Estratégia de testes | Pirâmide: unit (domain) → narrow integration (application) → broad integration (controller) |
 
 ## Decisões pendentes

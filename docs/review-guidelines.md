@@ -7,7 +7,7 @@
 ## 1. Arquitetura (CQRS + DDD)
 
 ### Modelo de Escrita (Write)
-- [ ] Use case em `application/` usa `UnitOfWork` (`unitOfWork.run(...)`)
+- [ ] Use case em `application/` só orquestra: carrega agregado → chama método de domínio → persiste → retorna `Output`
 - [ ] Use case **só orquestra**: carrega agregado → chama método de domínio → persiste → retorna `Output`
 - [ ] Regra de negócio **está no `domain/`** (métodos no agregado/entidade), não no use case
 - [ ] Repository **só tem**: `getBy...`, `has...`, `valuesBy...`, `add`, `update`
@@ -15,7 +15,7 @@
 
 ### Modelo de Leitura (Read)
 - [ ] Use case de leitura **não importa `repository/`**
-- [ ] Use case de leitura **não usa `UnitOfWork`**
+- [ ] Use case de leitura **não gerencia transação**
 - [ ] Query SQL/Drizzle está em `query/` (reutilizável)
 - [ ] Mapeamento coluna → `Output` está em `assembler/`
 

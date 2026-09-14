@@ -12,20 +12,20 @@ Convenções de código para backend (`server/`) e frontend (`client/`). O objet
 ```ts
 // evitar
 function encerrar(obra: Obra) {
-  if (obra.status === "ativa") {
-    obra.status = "encerrada";
-  } else {
-    throw new ObraJaEncerradaError();
-  }
+        if (obra.status === "ativa") {
+            obra.status = "encerrada";
+        } else {
+            throw new ObraJaEncerradaError();
+        }
 }
 
 // preferir
 function encerrar(obra: Obra) {
-  if (obra.status !== "ativa") {
-    throw new ObraJaEncerradaError();
-  }
+        if (obra.status !== "ativa") {
+            throw new ObraJaEncerradaError();
+        }
 
-  obra.status = "encerrada";
+        obra.status = "encerrada";
 }
 ```
 
@@ -33,7 +33,6 @@ function encerrar(obra: Obra) {
 
 ```ts
 import { ObraRepository } from "./ObraRepository";
-import { UnitOfWork } from "../../../shared/kernel/UnitOfWork";
 
 import type { Obra } from "./Obra";
 import type { DomainEvent } from "../../../shared/kernel/DomainEvent";
@@ -64,23 +63,22 @@ export class ObraJaEncerradaError extends Error { ... }
 ### Camadas do módulo — lado de escrita
 
 - `application/`: um use case por arquivo. A classe do use case tem nome que descreve a ação (ex.: `CreateObra`) e método `execute(input: Input): Promise<Output>`. Os tipos `Input` e `Output` são definidos **no mesmo arquivo**, sempre com esse nome literal (não `CreateObraInput`, não `Dto`).
-  - Gerencia transação via **Unit of Work** (`this.unitOfWork.run(...)`).
-  - Orquestra `repository/` e `domain/`. Não contém regra de negócio — só orquestração.
+                - Orquestra `repository/` e `domain/`. Não contém regra de negócio — só orquestração.
 - `repository/`: interface (contrato) + implementação concreta (Drizzle). Sempre orientado a agregado — um método carrega/salva o agregado completo, nunca uma linha de tabela isolada. Nunca contém nada do modelo de leitura (sem listagem paginada, sem DTO de tela). Nomes de método seguem sempre um destes formatos:
-  - `getBy...` → agregado ou `null`.
-  - `has...` → `boolean`.
-  - `valuesBy...` → lista de agregados.
-  - `add` / `update` → salva / atualiza agregado.
+                - `getBy...` → agregado ou `null`.
+                - `has...` → `boolean`.
+                - `valuesBy...` → lista de agregados.
+                - `add` / `update` → salva / atualiza agregado.
 - `domain/`: agregados, entidades, value objects, domain services, domain events.
-  - Entidades/agregados: propriedade privada `_props` contendo um objeto com todas as propriedades. O `type` desse objeto (ex.: `Props`) é definido **no início do mesmo arquivo** do agregado.
-  - Acesso aos dados via getters; mutação só através de métodos de negócio nomeados (nunca setters genéricos).
-  - Domain services: **sem efeito colateral**. Podem ler de um repositório, mas nunca chamam operação de escrita nele.
+                - Entidades/agregados: propriedade privada `_props` contendo um objeto com todas as propriedades. O `type` desse objeto (ex.: `Props`) é definido **no início do mesmo arquivo** do agregado.
+                - Acesso aos dados via getters; mutação só através de métodos de negócio nomeados (nunca setters genéricos).
+                - Domain services: **sem efeito colateral**. Podem ler de um repositório, mas nunca chamam operação de escrita nele.
 - `controller/`: define rota, valida/transforma o payload HTTP em `Input`, chama o use case, formata a resposta. Sem regra de negócio nem de aplicação.
 
 ### Camadas do módulo — lado de leitura
 
 - `controller/`: mesmo formato do lado de escrita (é a mesma pasta do módulo).
-- `application/`: use case com `execute(input: Input): Promise<Output>` (fica junto dos use cases de escrita, na mesma pasta), mas **executa a query diretamente** (sem repositório de agregado) e **nunca usa Unit of Work** (não escreve no banco). Nunca importa `repository/`.
+                - `application/`: use case com `execute(input: Input): Promise<Output>` (fica junto dos use cases de escrita, na mesma pasta), mas **executa a query diretamente** (sem repositório de agregado) e **não gerencia transação** (não escreve no banco). Nunca importa `repository/`.
 - `query/`: queries reaproveitadas entre use cases de leitura do mesmo módulo.
 - `assembler/`: transforma o resultado da query no shape de `Output`. Toda formatação/mapeamento de dado de leitura fica aqui, não dentro do use case.
 
