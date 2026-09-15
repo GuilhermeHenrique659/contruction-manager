@@ -4,6 +4,8 @@ import pino from 'pino';
 import { userRouter } from './modules/users/controller/UserController';
 import { projectRouter } from './modules/projects/controller/ProjectController';
 import { vendorRouter } from './modules/projects/controller/VendorController';
+import { itemRouter } from './modules/projects/controller/ItemController';
+import { categoryRouter } from './modules/projects/controller/CategoryController';
 import { DomainError } from './shared/domain/DomainError';
 import { ApplicationError } from './shared/domain/ApplicationError';
 import { AuthenticationError } from './modules/users/domain/AuthenticationError';
@@ -26,6 +28,8 @@ export function createApp() {
     routes.set('users', userRouter);
     routes.set('projects', projectRouter);
     routes.set('vendors', vendorRouter);
+    routes.set('items', itemRouter);
+    routes.set('categories', categoryRouter);
 
     for (const [prefix, router] of routes) {
         logger.info(`Registering route: /api/${prefix}`);
