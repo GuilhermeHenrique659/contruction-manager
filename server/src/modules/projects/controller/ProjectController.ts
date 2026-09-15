@@ -5,6 +5,7 @@ import express from 'express';
 import { db } from '../../../shared/infra/db/client';
 import { CreateProject } from '../application/CreateProject';
 import { ListVendors } from '../application/ListVendors';
+import { ListItems } from '../application/ListItems';
 import { ListProjects } from '../application/ListProjects';
 import { DatabaseProjectRepository } from '../repository/DatabaseProjectRepository';
 
@@ -13,6 +14,12 @@ export const projectRouter = express.Router();
 projectRouter.get('/:projectId/vendors', authMiddleware, async (req, res) => {
     const useCase = new ListVendors(db);
     const result = await useCase.execute({ projectId: req.params.projectId, name: req.query.name as string | undefined });
+    res.json(result);
+});
+
+projectRouter.get('/:projectId/items', authMiddleware, async (req, res) => {
+    const useCase = new ListItems(db);
+    const result = await useCase.execute({ projectId: req.params.projectId });
     res.json(result);
 });
 

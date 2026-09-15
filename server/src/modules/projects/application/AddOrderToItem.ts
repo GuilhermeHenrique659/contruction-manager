@@ -1,3 +1,4 @@
+import { ApplicationError } from '../../../shared/domain/ApplicationError';
 import { Order } from '../domain/Order';
 import { OrderQuantity } from '../domain/OrderQuantity';
 import { OrderPrice } from '../domain/OrderPrice';
@@ -27,12 +28,12 @@ export class AddOrderToItem {
     async execute(input: Input): Promise<Output> {
         const item = await this.itemRepo.getById(input.itemId);
         if (!item) {
-            throw new Error('Item not found');
+            throw new ApplicationError('Item not found');
         }
 
         const vendor = await this.vendorRepo.getById(input.vendorId);
         if (!vendor) {
-            throw new Error('Vendor not found');
+            throw new ApplicationError('Vendor not found');
         }
 
         const order = Order.create({

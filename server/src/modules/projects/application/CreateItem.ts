@@ -3,6 +3,7 @@ import { Id } from '../../../shared/domain/Id';
 import type { ItemRepository } from '../repository/ItemRepository';
 import type { ProjectRepository } from '../repository/ProjectRepository';
 import type { CategoryRepository } from '../repository/CategoryRepository';
+import { ApplicationError } from '../../../shared/domain/ApplicationError';
 
 type Input = {
   description: string;
@@ -24,12 +25,12 @@ export class CreateItem {
     async execute(input: Input): Promise<Output> {
         const project = await this.projectRepo.getById(input.projectId);
         if (!project) {
-            throw new Error('Project not found');
+            throw new ApplicationError('Project not found');
         }
 
         const category = await this.categoryRepo.getById(input.categoryId);
         if (!category) {
-            throw new Error('Category not found');
+            throw new ApplicationError('Category not found');
         }
 
         const item = Item.create({
