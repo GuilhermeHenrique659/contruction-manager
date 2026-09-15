@@ -5,13 +5,13 @@ import { OrderPurchasedAt } from './OrderPurchasedAt';
 import { Id } from '../../../shared/domain/Id';
 
 type Props = {
-  id: Id;
-  itemId: Id;
-  quantity: OrderQuantity;
-  price: OrderPrice;
-  vendorId: Id;
-  status: OrderStatus;
-  purchasedAt: OrderPurchasedAt;
+    id: Id;
+    itemId: Id;
+    quantity: OrderQuantity;
+    price: OrderPrice;
+    vendorId: Id;
+    status: OrderStatus;
+    purchasedAt: OrderPurchasedAt;
 };
 
 export class Order {

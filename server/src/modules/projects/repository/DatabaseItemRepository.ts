@@ -4,10 +4,6 @@ import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import type { ItemRepository } from './ItemRepository';
 import { Item } from '../domain/Item';
 import { Id } from '../../../shared/domain/Id';
-import { Order } from '../domain/Order';
-import { OrderQuantity } from '../domain/OrderQuantity';
-import { OrderPrice } from '../domain/OrderPrice';
-import { OrderStatus } from '../domain/OrderStatus';
 
 export class DatabaseItemRepository implements ItemRepository {
     constructor(private readonly tx: NodePgDatabase) { }
@@ -35,10 +31,10 @@ export class DatabaseItemRepository implements ItemRepository {
             await this.tx.insert(orders).values({
                 id: order.id,
                 itemId: item.id,
-                quantity: order.quantity.value,
-                price: order.price.value,
+                quantity: order.quantity,
+                price: order.price,
                 vendorId: order.vendorId,
-                status: order.status.value,
+                status: order.status,
                 purchasedAt: order.purchasedAt ? new Date(order.purchasedAt) : new Date(),
             });
         }
@@ -54,10 +50,10 @@ export class DatabaseItemRepository implements ItemRepository {
             await this.tx.insert(orders).values({
                 id: order.id,
                 itemId: item.id,
-                quantity: order.quantity.value,
-                price: order.price.value,
+                quantity: order.quantity,
+                price: order.price,
                 vendorId: order.vendorId,
-                status: order.status.value,
+                status: order.status,
                 purchasedAt: order.purchasedAt ? new Date(order.purchasedAt) : new Date(),
             });
         }
