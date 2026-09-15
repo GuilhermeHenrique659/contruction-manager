@@ -2,7 +2,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { Order } from './Order';
 import { OrderQuantity } from './OrderQuantity';
-import { OrderPrice } from './OrderPrice';
+import { Price } from './Price';
 import { Id } from '../../../shared/domain/Id';
 
 describe('Order', () => {
@@ -10,7 +10,7 @@ describe('Order', () => {
         const order = Order.create({
             itemId: Id.fromString('i1'),
             quantity: OrderQuantity.create(5),
-            price: OrderPrice.create(1000),
+            price: Price.create(1000),
             vendorId: Id.fromString('v1'),
             status: 'paid',
             purchasedAt: new Date(),
@@ -25,7 +25,7 @@ describe('Order', () => {
         const order = Order.create({
             itemId: Id.fromString('i1'),
             quantity: OrderQuantity.create(1),
-            price: OrderPrice.create(100),
+            price: Price.create(100),
             vendorId: Id.fromString('v1'),
         });
 
@@ -37,7 +37,7 @@ describe('Order', () => {
         const order = Order.create({
             itemId: Id.fromString('i1'),
             quantity: OrderQuantity.create(1),
-            price: OrderPrice.create(100),
+            price: Price.create(100),
             vendorId: Id.fromString('v1'),
         });
         const after = new Date();

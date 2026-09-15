@@ -3,6 +3,7 @@ import type { ItemRow } from '../query/ItemQuery';
 export type Output = {
     id: string;
     description: string;
+    total: number;
     category: {
         id: string;
         description: string;
@@ -26,6 +27,7 @@ export class ItemAssembler {
         return rows.map(r => ({
             id: r.id,
             description: r.description,
+            total: r.total ?? 0,
             category: {
                 id: r.categoryId,
                 description: r.categoryDescription,

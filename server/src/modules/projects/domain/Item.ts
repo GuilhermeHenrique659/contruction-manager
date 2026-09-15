@@ -1,5 +1,6 @@
 import { Id } from '../../../shared/domain/Id';
 import { type Order } from './Order';
+import { Price } from './Price';
 
 type Props = {
   id: Id;
@@ -7,6 +8,7 @@ type Props = {
   categoryId: Id;
   projectId: Id;
   orders: Order[];
+  total: Price;
 };
 
 export class Item {
@@ -16,10 +18,11 @@ export class Item {
         this._props = props;
     }
 
-    static create(props: Omit<Props, 'id' | 'orders'>): Item {
+    static create(props: Omit<Props, 'id' | 'orders' | 'total'>): Item {
         return new Item({
             id: Id.create(),
             orders: [],
+            total: Price.create(0),
             ...props,
         });
     }
@@ -44,7 +47,13 @@ export class Item {
         return this._props.orders;
     }
 
+    get total(): number {
+        return this._props.total.getValue();
+    }
+
     addOrder(order: Order): void {
         this._props.orders.push(order);
+
+        this._props.total = Price.create(this._props.total.getValue() + order.getTotalPrice());
     }
 }

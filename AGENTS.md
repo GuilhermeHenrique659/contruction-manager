@@ -19,6 +19,7 @@ Entidades de negócio (obras, compras, fornecedores, categorias etc.) ainda **n�
 - **Gerenciador de pacotes**: npm (com npm workspaces). Não usar yarn ou pnpm.
 - **Runtime**: Node.js na última versão LTS ativa (verificar `node --version` no ambiente; hoje LTS = Node 24.x). Sempre manter `engines` no `package.json` alinhado.
 - **Arquitetura backend**: CQRS + DDD. Módulos por *bounded context*. Write e read são modelos **lógicos** dentro do mesmo módulo (não pastas separadas): `application/` e `controller/` são compartilhados entre escrita e leitura; `repository/` e `domain/` só existem para escrita (com Unit of Work); `query/` e `assembler/` só existem para leitura (sem transação). Detalhe completo em `docs/architecture.md`.
+- **Arquitetura frontend**: MVC. **View** = componentes React em `components/`, organizados por Atomic Design (`atoms`, `molecules`, `organisms`, `pages`). **Model** = `features/<feature>/model/`, regras de negócio e transição de estado no cliente (TS puro, sem React). **Controller** = `features/<feature>/controller/`, use cases + gateways que chamam o backend; gateway usa inversão de dependência (interface + implementação com `fetch` nativo). Componentes nunca chamam use case/gateway direto — só via hook colocado com o componente. Detalhe completo em `docs/architecture.md`.
 
 ## Documentación detallada
 
@@ -55,6 +56,9 @@ Este `AGENTS.md` é o resumo executivo; os documentos em `docs/` têm a versão 
 │   └── package.json
 ├── client/               # React + Vite + TS
 │   ├── src/
+│   │   ├── components/     # View — Atomic Design (atoms, molecules, organisms, pages)
+│   │   ├── features/       # <feature>/model (regras de negócio) + <feature>/controller (use cases + gateways)
+│   │   └── types/          # tipos compartilhados
 │   └── package.json
 └── docker-compose.yml    # PostgreSQL local (quando criado)
 ```

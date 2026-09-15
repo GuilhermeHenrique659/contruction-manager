@@ -23,6 +23,7 @@ export const items = pgTable('items', {
     description: varchar('description', { length: 255 }).notNull(),
     categoryId: uuid('category_id').notNull().references(() => categories.id),
     projectId: uuid('project_id').notNull().references(() => projects.id),
+    total: integer('total'),
 });
 
 export const orders = pgTable('orders', {

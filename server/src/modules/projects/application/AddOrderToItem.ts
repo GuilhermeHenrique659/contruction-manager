@@ -1,7 +1,7 @@
 import { ApplicationError } from '../../../shared/domain/ApplicationError';
 import { Order } from '../domain/Order';
 import { OrderQuantity } from '../domain/OrderQuantity';
-import { OrderPrice } from '../domain/OrderPrice';
+import { Price } from '../domain/Price';
 import { Id } from '../../../shared/domain/Id';
 import type { ItemRepository } from '../repository/ItemRepository';
 import type { VendorRepository } from '../repository/VendorRepository';
@@ -39,7 +39,7 @@ export class AddOrderToItem {
         const order = Order.create({
             itemId: Id.fromString(input.itemId),
             quantity: OrderQuantity.create(input.quantity),
-            price: OrderPrice.create(Math.round(input.price * 100)),
+            price: Price.create(Math.round(input.price * 100)),
             vendorId: Id.fromString(input.vendorId),
             status: input.status,
             purchasedAt: input.purchasedAt,

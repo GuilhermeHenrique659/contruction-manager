@@ -92,11 +92,30 @@ export class ObraJaEncerradaError extends Error { ... }
 
 ## Frontend (client/)
 
+> Arquitetura MVC (detalhe completo em `docs/architecture.md`): View = `components/` (Atomic Design), Model = `features/<feature>/model/`, Controller = `features/<feature>/controller/` (use cases + gateways).
+
+### View (`components/`)
+
 - Componentes funcionais com hooks. Sem class components.
 - Um componente por arquivo, nome do arquivo em `PascalCase.tsx` igual ao nome do componente.
-- Chamadas HTTP centralizadas em uma camada de API (ex.: `src/api/`), nunca `fetch`/`axios` direto dentro de componente.
-- Estado de servidor (dados da API) e estado de UI (ex.: modal aberto/fechado) tratados separadamente.
-- Tipos compartilhados entre API e componentes ficam em `src/types/`.
+- Organizados por Atomic Design: `atoms/`, `molecules/`, `organisms/`, `pages/`. Cada nível só pode compor os níveis abaixo dele (ex.: `organism` compõe `molecules`/`atoms`, nunca o contrário).
+- Componente nunca chama `fetch`, `Gateway` ou `UseCase` diretamente. A ponte com o Controller é sempre um hook colocado junto do componente (`use<Componente>.ts`), seguindo a convenção do React (camelCase, prefixo `use`).
+- Estado de servidor (dados da API) e estado de UI (ex.: modal aberto/fechado) tratados separadamente — hoje sem lib de data-fetching, com `useState`/`useEffect` dentro do hook.
+
+### Model (`features/<feature>/model/`)
+
+- Entidades, value objects e funções de transição de estado do domínio no cliente. TypeScript puro — **nunca** importa React, hooks, `fetch` ou Gateway.
+- Segue a mesma convenção de agregado do backend quando aplicável: propriedade privada `_props`, `type Props` no início do arquivo, getters, mutação só via métodos de negócio nomeados (sem setters genéricos).
+
+### Controller (`features/<feature>/controller/`)
+
+- **Use case**: mesma convenção do backend — classe com `execute(input: Input): Promise<Output>`, `Input`/`Output` definidos no mesmo arquivo com esse nome literal. Orquestra `model/` + `Gateway`, sem regra de negócio própria.
+- **Gateway**: interface (`<Entity>Gateway.ts`) + implementação concreta (`Fetch<Entity>Gateway.ts` usando `fetch` nativo). Use case depende só da interface (inversão de dependência) — a implementação concreta é instanciada e injetada no hook que consome o use case.
+- Nenhuma chamada HTTP direta fora de um `Fetch...Gateway`.
+
+### Tipos compartilhados
+
+- Tipos usados entre `features/` e `components/` ficam em `src/types/`.
 
 ## Testes
 

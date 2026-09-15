@@ -104,6 +104,7 @@ erDiagram
 | description | varchar(255) | NOT NULL |
 | category_id | uuid | FK → categories.id |
 | project_id | uuid | FK → projects.id |
+| total | int | NULL |
 
 ### orders
 | Column | Type | Constraints |

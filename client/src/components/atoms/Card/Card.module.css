@@ -1,0 +1,128 @@
+.plate {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+  position: relative;
+  box-shadow: var(--shadow-deep);
+}
+
+.card {
+  padding: 26px 24px 22px;
+}
+
+.card.none {
+  padding: 0;
+}
+
+.card.sm {
+  padding: 16px;
+}
+
+.card.md {
+  padding: 26px 24px 22px;
+}
+
+.card.lg {
+  padding: 32px 28px 28px;
+}
+
+.card.hoverable:hover {
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, .7);
+  transform: translateY(-2px);
+}
+
+.card.clickable {
+  cursor: pointer;
+}
+
+.header {
+  padding-bottom: 16px;
+  border-bottom: 1px dashed var(--line-strong);
+  margin-bottom: 16px;
+}
+
+.body {
+}
+
+.footer {
+  padding-top: 16px;
+  border-top: 1px dashed var(--line-strong);
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cardTag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--brass-500);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 19px;
+  margin: 0 0 8px;
+  color: var(--ink-0);
+  letter-spacing: .01em;
+}
+
+.cardText {
+  margin: 0 0 18px;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-1);
+}
+
+.progress {
+  height: 6px;
+  background: var(--bg-2);
+  margin: 14px 0 4px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.progress > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--brass-500), var(--signal-400));
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  padding: 4px 10px;
+  border: 1px solid currentColor;
+}
+
+.badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.badgeOk { color: var(--ok-500); }
+.badgeWarn { color: var(--signal-400); }
+.badgeDanger { color: var(--rust-500); }
+.badgeNeutral { color: var(--ink-2); }

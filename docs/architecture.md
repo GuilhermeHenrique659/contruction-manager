@@ -221,6 +221,161 @@ export class GetObraById {
 - **Conexão com o banco**: Utilizar pool de conexões e reutilizar o pool ao longo da aplicação, evitando criar e fechar conexões repetidamente. A conexão deve ser estabelecida uma vez e compartilhada entre as operações.
 - Entidades de negócio: modelo definido em `docs/database-model.md` (users, projects, vendors, categories, items, orders, project_members), mas ainda não totalmente implementado no código — apenas `users` está modelado no banco (`shared/infra/db/schema/users.ts`).
 
+## Arquitetura do Frontend (client/)
+
+React + Vite + TypeScript, seguindo **MVC**:
+
+| Camada MVC | Onde vive | Responsabilidade |
+|---|---|---|
+| **View** | `components/` | Componentes React, organizados por **Atomic Design** (`atoms`, `molecules`, `organisms`, `pages`). Só renderização e composição — sem regra de negócio, sem chamada HTTP direta. |
+| **Model** | `features/<feature>/model/` | Entidades, value objects, regras de negócio e funções de transição de estado do domínio no cliente. TypeScript puro — **sem** dependência de React, fetch ou qualquer coisa de infraestrutura. |
+| **Controller** | `features/<feature>/controller/` | Use cases (orquestram Model + Gateway) e Gateways (interface + implementação que chama o backend). |
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                       React (Vite)                            │
+│                                                                 │
+│   components/ (View — Atomic Design)                           │
+│   atoms → molecules → organisms → pages                        │
+│        │  (hook colocado com o componente)                     │
+│        ▼                                                       │
+│   features/<feature>/controller/ (use case)                    │
+│        │              │                                        │
+│        ▼              ▼                                        │
+│   features/<feature>/model/   Gateway (interface) ← Fetch...Gateway│
+│                                            │                    │
+│                                            ▼                    │
+│                                    Backend (Express/API)        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Estrutura de pastas do frontend
+
+```
+client/
+├── src/
+│   ├── components/                     # View — Atomic Design (compartilhado entre features)
+│   │   ├── atoms/
+│   │   ├── molecules/
+│   │   ├── organisms/
+│   │   └── pages/
+│   │       └── <PageName>/
+│   │           ├── <PageName>.tsx
+│   │           └── use<PageName>.ts     # hook que conecta a page ao Controller
+│   ├── features/
+│   │   └── <feature>/                   # bounded context do frontend (mirror do módulo do backend)
+│   │       ├── model/                   # entidades, VOs, regras de negócio, transição de estado
+│   │       └── controller/
+│   │           ├── <UseCase>.ts         # execute(Input): Output — orquestra Model + Gateway
+│   │           ├── <Entity>Gateway.ts   # interface (contrato do gateway)
+│   │           └── Fetch<Entity>Gateway.ts  # implementação concreta (fetch nativo)
+│   ├── types/                           # tipos compartilhados entre features e components
+│   ├── App.tsx
+│   └── main.tsx
+└── package.json
+```
+
+### `components/` (View — Atomic Design)
+
+- `atoms/`: menor unidade de UI, sem lógica (ex.: `Button.tsx`, `Input.tsx`).
+- `molecules/`: composição de atoms com pouca lógica local (ex.: `SearchField.tsx`).
+- `organisms/`: seções completas de UI, compostas por molecules/atoms (ex.: `ObraCard.tsx`, `ObraTable.tsx`).
+- `pages/`: composição final ligada a uma rota. É aqui que a View se conecta ao Controller — **sempre através de um hook** colocado junto da página (`use<PageName>.ts`), nunca chamando use case/gateway diretamente do componente.
+- Componentes nunca importam `fetch`, `Gateway` ou `UseCase` diretamente — só através do hook.
+
+```tsx
+// components/pages/ObraList/ObraList.tsx
+export default function ObraList() {
+  const { obras, isLoading } = useObraList();
+
+  if (isLoading) return <Spinner />;
+
+  return <ObraTable obras={obras} />;
+}
+```
+
+```ts
+// components/pages/ObraList/useObraList.ts
+export function useObraList() {
+  const [obras, setObras] = useState<Obra[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const useCase = new ListObras(new FetchObraGateway());
+
+    useCase.execute({}).then((output) => {
+      setObras(output.obras);
+      setIsLoading(false);
+    });
+  }, []);
+
+  return { obras, isLoading };
+}
+```
+
+### `features/<feature>/model/` (Model)
+
+- Entidades, value objects, regras de negócio e transições de estado do lado do cliente (ex.: validação de formulário derivada de regra de negócio, cálculo de total, máquina de estados de um fluxo).
+- Segue a mesma convenção de agregado do backend quando fizer sentido (propriedade privada `_props`, getters, métodos de negócio nomeados — sem setters genéricos).
+- **Nunca** importa React, `fetch`, hooks ou qualquer Gateway. É testável isoladamente, em memória.
+
+### `features/<feature>/controller/` (Controller)
+
+- **Use case**: mesma convenção do backend — classe com método `execute(input: Input): Promise<Output>`, `Input`/`Output` definidos no mesmo arquivo. Orquestra `model/` e o `Gateway`, sem regra de negócio própria.
+- **Gateway**: aplica **inversão de dependência**, igual ao par `repository`/`domain` do backend:
+  - Uma **interface** (`<Entity>Gateway.ts`) declara o contrato — é isso que o use case recebe no construtor.
+  - Uma **implementação concreta** (`Fetch<Entity>Gateway.ts`) usa `fetch` nativo para chamar o backend e implementa a interface.
+  - O use case nunca depende da implementação concreta, só da interface — a concreta é instanciada e injetada no ponto de uso (hoje, dentro do próprio hook; se a aplicação crescer, pode migrar para um composition root único).
+
+```ts
+// features/obras/controller/ObraGateway.ts
+export interface ObraGateway {
+  listAll(): Promise<Obra[]>;
+  create(input: { nome: string; endereco: string }): Promise<{ id: string }>;
+}
+```
+
+```ts
+// features/obras/controller/FetchObraGateway.ts
+export class FetchObraGateway implements ObraGateway {
+  async listAll(): Promise<Obra[]> {
+    const response = await fetch("/api/obras");
+
+    if (!response.ok) throw new Error("Falha ao buscar obras");
+
+    return response.json();
+  }
+
+  async create(input: { nome: string; endereco: string }) {
+    // ...
+  }
+}
+```
+
+```ts
+// features/obras/controller/ListObras.ts
+type Input = Record<string, never>;
+
+type Output = {
+  obras: Obra[];
+};
+
+export class ListObras {
+  constructor(private readonly gateway: ObraGateway) {}
+
+  async execute(_input: Input): Promise<Output> {
+    const obras = await this.gateway.listAll();
+
+    return { obras };
+  }
+}
+```
+
+### Estado de servidor no client
+
+- Sem biblioteca de data-fetching (ex.: React Query) por ora. Estado de servidor é tratado com `useState`/`useEffect` dentro do hook colocado com a página/componente, seguindo o exemplo de `useObraList` acima.
+- Estado de UI (ex.: modal aberto, aba selecionada) fica no componente, separado do estado de servidor.
+
 ## Arquitetura de testes (pirâmide)
 
 Três níveis, todos seguindo o padrão **given / when / then**, focados em descrever regra de negócio (evitar teste que só testa getter/setter ou implementação).
@@ -258,7 +413,11 @@ Três níveis, todos seguindo o padrão **given / when / then**, focados em desc
 | Runtime | Node.js LTS ativo |
 | Arquitetura backend | CQRS + DDD, módulos por bounded context; write/read são modelos lógicos dentro do mesmo módulo (não pastas separadas) |
 | Padrão de transação (write) | `db.transaction` no controller |
-| Estratégia de testes | Pirâmide: unit (domain) → narrow integration (application) → broad integration (controller) |
+| Estratégia de testes (backend) | Pirâmide: unit (domain) → narrow integration (application) → broad integration (controller) |
+| Arquitetura frontend | MVC: View (`components/`, Atomic Design), Model (`features/<feature>/model/`), Controller (`features/<feature>/controller/`: use cases + gateways) |
+| Inversão de dependência no client | Use case depende da interface do Gateway, não da implementação concreta (`Fetch...Gateway`) — instanciada/injetada no hook |
+| Cliente HTTP no client | `fetch` nativo, encapsulado nos Gateways |
+| Estado de servidor no client | Hooks próprios (`useState`/`useEffect`) colocados com a página/componente — sem lib de data-fetching por ora |
 
 ## Decisões pendentes
 
@@ -267,3 +426,5 @@ Três níveis, todos seguindo o padrão **given / when / then**, focados em desc
 - Biblioteca de validação de payload nos controllers: `zod` já está em uso (`ValidateInput`, `UserController`).
 - Middleware de auth JWT (`shared/infra/http`): ainda não implementado; rotas públicas (`/auth/login`, `/auth/register`) existem sem auth no momento.
 - Mecanismo concreto de domain events (in-process vs. fila) — a definir quando houver o primeiro caso de uso real.
+- Estratégia de testes do frontend (`client/`): framework ainda não decidido, e por ora o client não tem testes automatizados.
+- Se/quando o `useState`/`useEffect` manual nos hooks do client não for suficiente (cache, revalidação, requisições concorrentes), avaliar migrar para uma lib de data-fetching — decisão em aberto.

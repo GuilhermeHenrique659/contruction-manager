@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import { Item } from './Item';
 import { Order } from './Order';
 import { OrderQuantity } from './OrderQuantity';
-import { OrderPrice } from './OrderPrice';
+import { Price } from './Price';
 import { Id } from '../../../shared/domain/Id';
 
 describe('Item', () => {
@@ -27,7 +27,7 @@ describe('Item', () => {
         const order = Order.create({
             itemId: item.id ? Id.fromString(item.id) : Id.fromString('i1'),
             quantity: OrderQuantity.create(2),
-            price: OrderPrice.create(500),
+            price: Price.create(500),
             vendorId: Id.fromString('v1'),
         });
         // Pass itemId manually since order needs it

@@ -7,6 +7,7 @@ export type ItemRow = {
     description: string;
     categoryId: string;
     categoryDescription: string;
+    total: number | null;
     orders: {
         id: string;
         quantity: number;
@@ -28,10 +29,11 @@ export class ItemQuery {
             description: items.description,
             categoryId: items.categoryId,
             categoryDescription: categories.description,
+            total: items.total,
         })
-        .from(items)
-        .leftJoin(categories, eq(items.categoryId, categories.id))
-        .where(eq(items.projectId, projectId));
+            .from(items)
+            .leftJoin(categories, eq(items.categoryId, categories.id))
+            .where(eq(items.projectId, projectId));
 
         const itemIds = itemRows.map(i => i.id);
         const orderRows = await this.db.select({
@@ -41,19 +43,20 @@ export class ItemQuery {
             status: orders.status,
             vendorId: orders.vendorId,
             vendorName: vendors.name,
-        vendorPaymentDay: vendors.paymentDay,
-        purchasedAt: orders.purchasedAt,
-        itemId: orders.itemId,
+            vendorPaymentDay: vendors.paymentDay,
+            purchasedAt: orders.purchasedAt,
+            itemId: orders.itemId,
         })
-        .from(orders)
-        .leftJoin(vendors, eq(orders.vendorId, vendors.id))
-        .where(itemIds.length > 0 ? and(...itemIds.map(id => eq(orders.itemId, id))) : eq(orders.itemId, ''));
+            .from(orders)
+            .leftJoin(vendors, eq(orders.vendorId, vendors.id))
+            .where(itemIds.length > 0 ? and(...itemIds.map(id => eq(orders.itemId, id))) : eq(orders.itemId, ''));
 
         return itemRows.map(i => ({
             id: i.id,
             description: i.description,
             categoryId: i.categoryId,
             categoryDescription: i.categoryDescription || '',
+            total: i.total,
             orders: orderRows.filter(o => o.itemId === i.id).map(o => ({
                 id: o.id,
                 quantity: o.quantity,
