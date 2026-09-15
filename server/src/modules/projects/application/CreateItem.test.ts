@@ -5,6 +5,7 @@ import { FakeItemRepository } from '../repository/FakeItemRepository';
 import { FakeProjectRepository } from '../repository/FakeProjectRepository';
 import { FakeCategoryRepository } from '../repository/FakeCategoryRepository';
 import { Project } from '../domain/Project';
+import { Category } from '../domain/Category';
 
 
 
@@ -14,11 +15,14 @@ describe('CreateItem', () => {
         const projectRepo = new FakeProjectRepository();
         const categoryRepo = new FakeCategoryRepository();
 
+        const category = Category.create({ description: 'Cat 1' });
+        await categoryRepo.add(category);
+        
         const project = Project.create({ description: 'Proj' }, 'u1');
         await projectRepo.add(project);
 
         const useCase = new CreateItem(itemRepo, projectRepo, categoryRepo);
-        const result = await useCase.execute({ description: 'Item A', categoryId: 'cat-1', projectId: project.id });
+        const result = await useCase.execute({ description: 'Item A', categoryId: category.id, projectId: project.id });
 
         assert.strictEqual(typeof result.id, 'string');
         const stored = await itemRepo.getById(result.id);
@@ -48,7 +52,7 @@ describe('CreateItem', () => {
 
         const useCase = new CreateItem(itemRepo, projectRepo, categoryRepo);
         await assert.rejects(
-            () => useCase.execute({ description: 'Item A', categoryId: null as unknown as string, projectId: project.id }),
+            () => useCase.execute({ description: 'Item A', categoryId: 'missing', projectId: project.id }),
             /Category not found/
         );
     });

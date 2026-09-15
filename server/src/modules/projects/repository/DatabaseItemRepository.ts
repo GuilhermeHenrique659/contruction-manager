@@ -10,7 +10,7 @@ import { OrderPrice } from '../domain/OrderPrice';
 import { OrderStatus } from '../domain/OrderStatus';
 
 export class DatabaseItemRepository implements ItemRepository {
-    constructor(private readonly tx: NodePgDatabase) {}
+    constructor(private readonly tx: NodePgDatabase) { }
 
     async getById(id: string): Promise<Item | null> {
         const [row] = await this.tx.select().from(items).where(eq(items.id, id));
