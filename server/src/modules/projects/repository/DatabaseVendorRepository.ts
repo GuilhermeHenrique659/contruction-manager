@@ -1,10 +1,10 @@
-import { Vendor } from '../domain/Vendor.js';
-import { type VendorRepository } from './VendorRepository.js';
-import { vendors } from '../../../shared/infra/db/schema/projects.js';
+import { Vendor } from '../domain/Vendor';
+import { type VendorRepository } from './VendorRepository';
+import { vendors } from '../../../shared/infra/db/schema/projects';
 import { eq, and } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { Id } from '../../../shared/domain/Id.js';
-import { DayOfMonth } from '../domain/DayOfMonth.js';
+import { Id } from '../../../shared/domain/Id';
+import { DayOfMonth } from '../domain/DayOfMonth';
 
 export class DatabaseVendorRepository implements VendorRepository {
     constructor(private readonly tx: NodePgDatabase) { }

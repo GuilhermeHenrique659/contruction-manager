@@ -1,4 +1,4 @@
-import { DomainError } from '../../../shared/domain/DomainError.js';
+import { DomainError } from '../../../shared/domain/DomainError';
 
 export class InvalidPaymentDayError extends DomainError {
     constructor() {

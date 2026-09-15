@@ -1,6 +1,6 @@
-import { type Project } from '../domain/Project.js';
-import { type ProjectRepository } from './ProjectRepository.js';
-import { projects, projectMembers } from '../../../shared/infra/db/schema/projects.js';
+import { type Project } from '../domain/Project';
+import { type ProjectRepository } from './ProjectRepository';
+import { projects, projectMembers } from '../../../shared/infra/db/schema/projects';
 import { eq } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 

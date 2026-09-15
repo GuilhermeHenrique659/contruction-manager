@@ -1,6 +1,6 @@
 import pino from 'pino';
-import { Env } from './shared/config/env.js';
-import { createApp } from './app.js';
+import { Env } from './shared/config/env';
+import { createApp } from './app';
 
 const logger = pino({ level: 'info' }, pino.transport({ target: 'pino-pretty', options: { colorize: true } }));
 

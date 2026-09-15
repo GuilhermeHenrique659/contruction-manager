@@ -1,6 +1,6 @@
-import { Id } from '../../../shared/domain/Id.js';
-import { ProjectMember } from './ProjectMember.js';
-import { MemberAlreadyExistsError } from './MemberAlreadyExistsError.js';
+import { Id } from '../../../shared/domain/Id';
+import { ProjectMember } from './ProjectMember';
+import { MemberAlreadyExistsError } from './MemberAlreadyExistsError';
 
 type Props = {
   id: Id;

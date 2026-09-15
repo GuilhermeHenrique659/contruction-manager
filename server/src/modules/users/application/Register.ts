@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
-import { EmailAlreadyExistsError } from '../domain/EmailAlreadyExistsError.js';
-import { User } from '../domain/User.js';
-import { JWT_SECRET } from '../../../shared/config/env.js';
-import type { UserRepository } from '../repository/UserRepository.js';
+import { EmailAlreadyExistsError } from '../domain/EmailAlreadyExistsError';
+import { User } from '../domain/User';
+import { JWT_SECRET } from '../../../shared/config/env';
+import type { UserRepository } from '../repository/UserRepository';
 
 type Input = {
     name: string;

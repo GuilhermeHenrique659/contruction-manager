@@ -1,5 +1,5 @@
-import { VendorNotFoundError } from './VendorNotFoundError.js';
-import type { VendorRepository } from '../repository/VendorRepository.js';
+import { VendorNotFoundError } from './VendorNotFoundError';
+import type { VendorRepository } from '../repository/VendorRepository';
 
 type Input = {
   id: string;

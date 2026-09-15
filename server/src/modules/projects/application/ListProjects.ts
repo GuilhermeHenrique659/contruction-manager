@@ -1,5 +1,5 @@
-import { projects, projectMembers } from '../../../shared/infra/db/schema/projects.js';
-import { users } from '../../../shared/infra/db/schema/users.js';
+import { projects, projectMembers } from '../../../shared/infra/db/schema/projects';
+import { users } from '../../../shared/infra/db/schema/users';
 import { eq, inArray } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 

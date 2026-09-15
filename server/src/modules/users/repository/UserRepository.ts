@@ -1,4 +1,4 @@
-import type { User } from '../domain/User.js';
+import type { User } from '../domain/User';
 
 export interface UserRepository {
         getByEmail(email: string): Promise<User | null>;

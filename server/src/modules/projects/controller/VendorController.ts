@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { validateInput } from '../../../shared/infra/http/ValidateInput.js';
-import { authMiddleware } from '../../../shared/infra/http/AuthMiddleware.js';
+import { validateInput } from '../../../shared/infra/http/ValidateInput';
+import { authMiddleware } from '../../../shared/infra/http/AuthMiddleware';
 import express from 'express';
-import { db } from '../../../shared/infra/db/client.js';
-import { CreateVendor } from '../application/CreateVendor.js';
-import { UpdateVendor } from '../application/UpdateVendor.js';
-import { DatabaseVendorRepository } from '../repository/DatabaseVendorRepository.js';
+import { db } from '../../../shared/infra/db/client';
+import { CreateVendor } from '../application/CreateVendor';
+import { UpdateVendor } from '../application/UpdateVendor';
+import { DatabaseVendorRepository } from '../repository/DatabaseVendorRepository';
 
 export const vendorRouter = express.Router();
 

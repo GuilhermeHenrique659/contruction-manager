@@ -1,5 +1,5 @@
-import { Id } from '../../../shared/domain/Id.js';
-import { DayOfMonth } from './DayOfMonth.js';
+import { Id } from '../../../shared/domain/Id';
+import { DayOfMonth } from './DayOfMonth';
 
 type Props = {
   id: Id;

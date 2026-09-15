@@ -1,4 +1,4 @@
-import { vendors } from '../../../shared/infra/db/schema/projects.js';
+import { vendors } from '../../../shared/infra/db/schema/projects';
 import { eq, and, like } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 

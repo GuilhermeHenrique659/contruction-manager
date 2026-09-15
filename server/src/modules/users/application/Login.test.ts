@@ -1,10 +1,10 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { Login } from './Login.js';
-import { AuthenticationError } from '../domain/AuthenticationError.js';
-import { FakeUserRepository } from '../repository/FakeUserRepository.js';
-import { User } from '../domain/User.js';
-import { Id } from '../../../shared/domain/Id.js';
+import { Login } from './Login';
+import { AuthenticationError } from '../domain/AuthenticationError';
+import { FakeUserRepository } from '../repository/FakeUserRepository';
+import { User } from '../domain/User';
+import { Id } from '../../../shared/domain/Id';
 
 describe('Login', () => {
     it('given existing user, when execute, then returns id, name and token with both', async () => {

@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { Env } from '../../config/env.js';
+import { Env } from '../../config/env';
 
 let pool: Pool | null = null;
 

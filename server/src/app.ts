@@ -1,14 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino';
-import { userRouter } from './modules/users/controller/UserController.js';
-import { projectRouter } from './modules/projects/controller/ProjectController.js';
-import { vendorRouter } from './modules/projects/controller/VendorController.js';
-import { DomainError } from './shared/domain/DomainError.js';
-import { ApplicationError } from './shared/domain/ApplicationError.js';
-import { AuthenticationError } from './modules/users/domain/AuthenticationError.js';
-import { PermissionError } from './shared/domain/PermissionError.js';
-import { InvalidPayloadError } from './shared/domain/InvalidPayloadError.js';
+import { userRouter } from './modules/users/controller/UserController';
+import { projectRouter } from './modules/projects/controller/ProjectController';
+import { vendorRouter } from './modules/projects/controller/VendorController';
+import { DomainError } from './shared/domain/DomainError';
+import { ApplicationError } from './shared/domain/ApplicationError';
+import { AuthenticationError } from './modules/users/domain/AuthenticationError';
+import { PermissionError } from './shared/domain/PermissionError';
+import { InvalidPayloadError } from './shared/domain/InvalidPayloadError';
 
 export function createApp() {
     const app = express();

@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { DayOfMonth } from './DayOfMonth.js';
+import { DayOfMonth } from './DayOfMonth';
 
 describe('DayOfMonth', () => {
     it('given valid integer when create then succeeds', () => {

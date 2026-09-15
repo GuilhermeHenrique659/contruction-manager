@@ -1,4 +1,4 @@
-import { InvalidPaymentDayError } from './InvalidPaymentDayError.js';
+import { InvalidPaymentDayError } from './InvalidPaymentDayError';
 
 export class DayOfMonth {
     private readonly _value: number;

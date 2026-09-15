@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { validateInput } from '../../../shared/infra/http/ValidateInput.js';
-import { authMiddleware } from '../../../shared/infra/http/AuthMiddleware.js';
+import { validateInput } from '../../../shared/infra/http/ValidateInput';
+import { authMiddleware } from '../../../shared/infra/http/AuthMiddleware';
 import express from 'express';
-import { db } from '../../../shared/infra/db/client.js';
-import { CreateProject } from '../application/CreateProject.js';
-import { ListVendors } from '../application/ListVendors.js';
-import { ListProjects } from '../application/ListProjects.js';
-import { DatabaseProjectRepository } from '../repository/DatabaseProjectRepository.js';
+import { db } from '../../../shared/infra/db/client';
+import { CreateProject } from '../application/CreateProject';
+import { ListVendors } from '../application/ListVendors';
+import { ListProjects } from '../application/ListProjects';
+import { DatabaseProjectRepository } from '../repository/DatabaseProjectRepository';
 
 export const projectRouter = express.Router();
 

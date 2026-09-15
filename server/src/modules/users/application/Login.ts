@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { AuthenticationError } from '../domain/AuthenticationError.js';
-import { JWT_SECRET } from '../../../shared/config/env.js';
-import type { UserRepository } from '../repository/UserRepository.js';
+import { AuthenticationError } from '../domain/AuthenticationError';
+import { JWT_SECRET } from '../../../shared/config/env';
+import type { UserRepository } from '../repository/UserRepository';
 
 type Input = {
     email: string;

@@ -1,13 +1,13 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { db } from '../../../shared/infra/db/client.js';
-import { ListVendors } from './ListVendors.js';
-import { CreateVendor } from './CreateVendor.js';
-import { CreateProject } from './CreateProject.js';
-import { Register } from '../../users/application/Register.js';
-import { DatabaseVendorRepository } from '../repository/DatabaseVendorRepository.js';
-import { DatabaseProjectRepository } from '../repository/DatabaseProjectRepository.js';
-import { DatabaseUserRepository } from '../../users/repository/DatabaseUserRepository.js';
+import { db } from '../../../shared/infra/db/client';
+import { ListVendors } from './ListVendors';
+import { CreateVendor } from './CreateVendor';
+import { CreateProject } from './CreateProject';
+import { Register } from '../../users/application/Register';
+import { DatabaseVendorRepository } from '../repository/DatabaseVendorRepository';
+import { DatabaseProjectRepository } from '../repository/DatabaseProjectRepository';
+import { DatabaseUserRepository } from '../../users/repository/DatabaseUserRepository';
 
 describe('ListVendors', () => {
     it('given project with vendors when execute then returns vendors', async () => {

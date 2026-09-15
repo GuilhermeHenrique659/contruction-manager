@@ -1,4 +1,4 @@
-import type { Vendor } from '../domain/Vendor.js';
+import { type Vendor } from "../domain/Vendor";
 
 export interface VendorRepository {
   getById(id: string): Promise<Vendor | null>;

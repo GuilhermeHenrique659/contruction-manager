@@ -1,5 +1,5 @@
-import type { Vendor } from '../domain/Vendor.js';
-import type { VendorRepository } from './VendorRepository.js';
+import type { Vendor } from '../domain/Vendor';
+import type { VendorRepository } from './VendorRepository';
 
 export class FakeVendorRepository implements VendorRepository {
     private items: Vendor[] = [];

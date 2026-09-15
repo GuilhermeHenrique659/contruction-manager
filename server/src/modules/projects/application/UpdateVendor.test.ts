@@ -1,10 +1,10 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { UpdateVendor } from './UpdateVendor.js';
-import { FakeVendorRepository } from '../repository/FakeVendorRepository.js';
-import { Vendor } from '../domain/Vendor.js';
-import { DayOfMonth } from '../domain/DayOfMonth.js';
-import { Id } from '../../../shared/domain/Id.js';
+import { UpdateVendor } from './UpdateVendor';
+import { FakeVendorRepository } from '../repository/FakeVendorRepository';
+import { Vendor } from '../domain/Vendor';
+import { DayOfMonth } from '../domain/DayOfMonth';
+import { Id } from '../../../shared/domain/Id';
 
 describe('UpdateVendor', () => {
     it('given existing vendor when update name and paymentDay then updates vendor', async () => {

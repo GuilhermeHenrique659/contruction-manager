@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { CreateProject } from './CreateProject.js';
-import { type ProjectRepository } from '../repository/ProjectRepository.js';
-import { type Project } from '../domain/Project.js';
+import { CreateProject } from './CreateProject';
+import { type ProjectRepository } from '../repository/ProjectRepository';
+import { type Project } from '../domain/Project';
 
 class FakeProjectRepository implements ProjectRepository {
     private items: Project[] = [];

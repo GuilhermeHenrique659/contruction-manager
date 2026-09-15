@@ -1,5 +1,5 @@
-import { Project } from '../domain/Project.js';
-import type { ProjectRepository } from '../repository/ProjectRepository.js';
+import { Project } from '../domain/Project';
+import type { ProjectRepository } from '../repository/ProjectRepository';
 
 type Input = {
   description: string;

@@ -24,7 +24,7 @@ export default [
     rules: {
       "indent": ["error", 4],
       "@typescript-eslint/explicit-module-boundary-types": "off",
-      "@typescript-eslint/no-explicit-any": ["warn", { "fixToUnknown": true }],
+      "@typescript-eslint/no-explicit-any": ["warn", { "fixToUnknown": false }],
       "@typescript-eslint/consistent-type-imports": ["error", { "prefer": "type-imports", "fixStyle": "inline-type-imports" }],
       "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
       "import/no-restricted-paths": [

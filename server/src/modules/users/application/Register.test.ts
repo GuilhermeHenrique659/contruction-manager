@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { Register } from './Register.js';
-import { FakeUserRepository } from '../repository/FakeUserRepository.js';
+import { Register } from './Register';
+import { FakeUserRepository } from '../repository/FakeUserRepository';
 
 describe('Register', () => {
     it('given new email, when execute, then creates user and returns token', async () => {

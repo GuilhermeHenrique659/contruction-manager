@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { Project } from './Project.js';
-import { ProjectMember } from './ProjectMember.js';
-import { MemberAlreadyExistsError } from './MemberAlreadyExistsError.js';
+import { Project } from './Project';
+import { ProjectMember } from './ProjectMember';
+import { MemberAlreadyExistsError } from './MemberAlreadyExistsError';
 
 describe('Project', () => {
     it('given members when addMember with new user then adds member', () => {

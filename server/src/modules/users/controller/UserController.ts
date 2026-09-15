@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { validateInput } from '../../../shared/infra/http/ValidateInput.js';
+import { validateInput } from '../../../shared/infra/http/ValidateInput';
 import express from 'express';
-import { db } from '../../../shared/infra/db/client.js';
-import { DatabaseUserRepository } from '../repository/DatabaseUserRepository.js';
-import { Login } from '../application/Login.js';
-import { Register } from '../application/Register.js';
+import { db } from '../../../shared/infra/db/client';
+import { DatabaseUserRepository } from '../repository/DatabaseUserRepository';
+import { Login } from '../application/Login';
+import { Register } from '../application/Register';
 
 export const userRouter = express.Router();
 

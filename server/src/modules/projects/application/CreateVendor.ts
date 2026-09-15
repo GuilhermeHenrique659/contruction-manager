@@ -1,7 +1,7 @@
-import { Id } from '../../../shared/domain/Id.js';
-import { Vendor } from '../domain/Vendor.js';
-import { DayOfMonth } from '../domain/DayOfMonth.js';
-import type { VendorRepository } from '../repository/VendorRepository.js';
+import { Id } from '../../../shared/domain/Id';
+import { Vendor } from '../domain/Vendor';
+import { DayOfMonth } from '../domain/DayOfMonth';
+import type { VendorRepository } from '../repository/VendorRepository';
 
 type Input = {
   name: string;

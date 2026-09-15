@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { CreateVendor } from './CreateVendor.js';
-import { FakeVendorRepository } from '../repository/FakeVendorRepository.js';
-import { DayOfMonth } from '../domain/DayOfMonth.js';
+import { CreateVendor } from './CreateVendor';
+import { FakeVendorRepository } from '../repository/FakeVendorRepository';
+import { DayOfMonth } from '../domain/DayOfMonth';
 
 describe('CreateVendor', () => {
     it('given new vendor when execute then creates vendor', async () => {

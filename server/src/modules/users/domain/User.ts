@@ -1,4 +1,4 @@
-import { Id } from '../../../shared/domain/Id.js';
+import { Id } from '../../../shared/domain/Id';
 
 type Props = {
         id: Id;

@@ -1,10 +1,10 @@
-import express from 'express';
+import type express from 'express';
 import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert';
-import { createApp } from '../../../app.js';
-import { closePool } from '../../../shared/infra/db/pool.js';
-import { fetchApp } from '../../../shared/test/testHelper.js';
-import { generateTestToken } from '../../../shared/test/authHelper.js';
+import { createApp } from '../../../app';
+import { closePool } from '../../../shared/infra/db/pool';
+import { fetchApp } from '../../../shared/test/testHelper';
+import { generateTestToken } from '../../../shared/test/authHelper';
 
 let app: express.Application;
 let fetchAppInst: Awaited<ReturnType<typeof fetchApp>>;

@@ -1,5 +1,5 @@
-import type { UserRepository } from './UserRepository.js';
-import { type User } from '../domain/User.js';
+import type { UserRepository } from './UserRepository';
+import { type User } from '../domain/User';
 
 export class FakeUserRepository implements UserRepository {
     private users: User[] = [];

@@ -1,9 +1,9 @@
 import { eq } from 'drizzle-orm';
-import type { UserRepository } from './UserRepository.js';
-import { User } from '../domain/User.js';
-import { Id } from '../../../shared/domain/Id.js';
-import { users } from '../../../shared/infra/db/schema/users.js';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres/driver';
+import type { UserRepository } from './UserRepository';
+import { User } from '../domain/User';
+import { Id } from '../../../shared/domain/Id';
+import { users } from '../../../shared/infra/db/schema/users';
+import { type NodePgDatabase } from 'drizzle-orm/node-postgres/driver';
 
 
 export class DatabaseUserRepository implements UserRepository {
