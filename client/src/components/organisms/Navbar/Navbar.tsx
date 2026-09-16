@@ -4,16 +4,9 @@ import { Button } from '../../atoms';
 import { Logo } from '../../atoms/Logo/Logo';
 import { useTheme } from '../../../context/ThemeContext';
 
-export interface NavLink {
-  label: string;
-  href: string;
-}
-
 export interface NavbarProps {
   brand?: string;
   brandHref?: string;
-  links?: NavLink[];
-  actions?: React.ReactNode;
   user?: {
     name: string;
     avatar?: string;
@@ -24,8 +17,6 @@ export interface NavbarProps {
 export function Navbar({
   brand = 'ESTRUTURA',
   brandHref = '/',
-  links = [],
-  actions,
   user = null,
   onLogout,
 }: NavbarProps) {
@@ -38,27 +29,11 @@ export function Navbar({
   return (
     <header className={styles.navbar}>
       <nav className={styles.navContainer} role="navigation" aria-label="Navegação principal">
-        <a href={brandHref} className={styles.brand} onClick={closeMenu}>
+        <a href={brandHref} className={styles.brand} onClick={closeMenu} aria-label={brand}>
           <Logo size="md" />
-          <div className={styles.brandText}>
-            <span className={styles.brandName}>{brand}</span>
-            <small className={styles.brandTagline}>SISTEMA DE GESTÃO DE OBRAS</small>
-          </div>
         </a>
 
         <div className={`${styles.navLinks} ${isMenuOpen ? styles.open : ''}`} id="nav-links">
-          <ul className={styles.linkList}>
-            {links.map((link) => (
-              <li key={link.href}>
-                <a href={link.href} className={styles.link} onClick={closeMenu}>
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          {actions && <div className={styles.actions}>{actions}</div>}
-
           <button
             className={styles.themeToggle}
             onClick={toggleTheme}
@@ -84,16 +59,7 @@ export function Navbar({
                 </Button>
               )}
             </div>
-          ) : (
-            <div className={styles.authActions}>
-              <Button variant="outline" size="sm" className={styles.loginBtn}>
-                Entrar
-              </Button>
-              <Button variant="primary" size="sm" className={styles.registerBtn}>
-                Cadastrar
-              </Button>
-            </div>
-          )}
+          ) : null}
         </div>
 
         <button

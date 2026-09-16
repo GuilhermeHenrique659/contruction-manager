@@ -15,7 +15,7 @@ describe('ListVendors', () => {
         const userResult = await new Register(userRepo).execute({ name: 'Test', email: 'test@test.com' });
 
         const projectRepo = new DatabaseProjectRepository(db);
-        const projectResult = await new CreateProject(projectRepo).execute({ description: 'Proj', creatorUserId: userResult.id });
+        const projectResult = await new CreateProject(projectRepo).execute({ name: 'Test Project', description: 'Proj', creatorUserId: userResult.id });
 
         const vendorRepo = new DatabaseVendorRepository(db);
         await new CreateVendor(vendorRepo).execute({ name: 'Vendor A', paymentDay: 10, projectId: projectResult.id });
@@ -30,7 +30,7 @@ describe('ListVendors', () => {
         const userResult = await new Register(userRepo).execute({ name: 'Test2', email: 'test2@test.com' });
 
         const projectRepo = new DatabaseProjectRepository(db);
-        const projectResult = await new CreateProject(projectRepo).execute({ description: 'Proj2', creatorUserId: userResult.id });
+        const projectResult = await new CreateProject(projectRepo).execute({ name: 'Test Project 2', description: 'Proj2', creatorUserId: userResult.id });
 
         const vendorRepo = new DatabaseVendorRepository(db);
         await new CreateVendor(vendorRepo).execute({ name: 'Vendor B', paymentDay: 5, projectId: projectResult.id });

@@ -1,9 +1,11 @@
 import { projects, projectMembers } from '../../../shared/infra/db/schema/projects';
 import { users } from '../../../shared/infra/db/schema/users';
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { ApplicationError } from '../../../shared/domain/ApplicationError';
 
 export type Input = {
+    projectId: string;
     userId: string;
 };
 
@@ -18,20 +20,22 @@ export type Output = {
     name: string;
     description: string;
     members: MemberOutput[];
-}[];
+};
 
-export class ListProjects {
-    constructor(private readonly db: NodePgDatabase) {}
+export class GetProjectById {
+    constructor(private readonly db: NodePgDatabase) { }
 
     async execute(input: Input): Promise<Output> {
         const projectRows = await this.db
             .select({ id: projects.id, name: projects.name, description: projects.description })
             .from(projects)
             .innerJoin(projectMembers, eq(projects.id, projectMembers.projectId))
-            .where(eq(projectMembers.userId, input.userId));
+            .where(and(eq(projects.id, input.projectId), eq(projectMembers.userId, input.userId)))
 
-        const projectIds = projectRows.map((r) => r.id);
-        if (projectIds.length === 0) return [];
+        if (projectRows.length === 0) throw new ApplicationError('Project not found or user is not a member');
+
+        const project = projectRows[0];
+        const projectIds = [project.id];
 
         const memberRows = await this.db
             .select({
@@ -54,11 +58,11 @@ export class ListProjects {
             });
         }
 
-        return projectRows.map((p) => ({
-            id: p.id,
-            name: p.name,
-            description: p.description,
-            members: membersByProject[p.id] || [],
-        }));
+        return {
+            id: project.id,
+            name: project.name,
+            description: project.description,
+            members: membersByProject[project.id] || [],
+        };
     }
 }

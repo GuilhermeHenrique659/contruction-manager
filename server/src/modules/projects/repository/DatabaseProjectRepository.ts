@@ -16,6 +16,7 @@ export class DatabaseProjectRepository implements ProjectRepository {
     async add(project: Project): Promise<void> {
         await this.tx.insert(projects).values({
             id: project.id,
+            name: project.name,
             description: project.description,
         });
         if (project.members.length) {

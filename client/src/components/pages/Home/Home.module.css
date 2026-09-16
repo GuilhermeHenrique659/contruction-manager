@@ -1,18 +1,33 @@
 .page {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .main {
+  flex: 1;
   max-width: 1180px;
   margin: 0 auto;
   padding: 0 28px 120px;
+  width: 100%;
 }
 
-.intro {
-  padding-top: 76px;
-  padding-bottom: 40px;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 32px;
+  padding-bottom: 24px;
   border-bottom: 1px solid var(--line);
-  margin-bottom: 40px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .eyebrow {
@@ -27,7 +42,7 @@
   padding: 6px 12px;
   border-radius: 3px;
   background: var(--bg-1);
-  margin-bottom: 18px;
+  width: fit-content;
 }
 
 .eyebrow::before {
@@ -36,22 +51,75 @@
 }
 
 .title {
+  margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(34px, 5vw, 54px);
-  line-height: 1.05;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.1;
   letter-spacing: .01em;
-  margin: 0 0 16px;
-  max-width: 16ch;
   color: var(--ink-0);
 }
 
-.subtitle {
-  max-width: 56ch;
-  color: var(--ink-1);
-  font-size: 16px;
-  line-height: 1.7;
+.createBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.projectsSection {
+  width: 100%;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 16px;
+  color: var(--ink-2);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--line);
+  border-top-color: var(--brass-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 20px;
+  text-align: center;
+  background: var(--plate-grad);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-cut);
+}
+
+.emptyText {
   margin: 0;
+  font-size: 16px;
+  color: var(--ink-2);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -59,7 +127,28 @@
     padding: 0 18px 100px;
   }
 
-  .intro {
-    padding-top: 50px;
+  .header {
+    padding-top: 24px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .headerLeft {
+    width: 100%;
+  }
+
+  .createBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding: 0 14px 80px;
   }
 }

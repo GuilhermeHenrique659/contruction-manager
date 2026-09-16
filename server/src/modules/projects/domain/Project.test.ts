@@ -6,7 +6,7 @@ import { MemberAlreadyExistsError } from './MemberAlreadyExistsError';
 
 describe('Project', () => {
     it('given members when addMember with new user then adds member', () => {
-        const project = Project.create({ description: 'Desc' }, 'u1');
+        const project = Project.create({ name: 'Test Project', description: 'Desc' }, 'u1');
 
         project.addMember(ProjectMember.create({ userId: 'u2', role: 'member' }));
 
@@ -15,7 +15,7 @@ describe('Project', () => {
     });
 
     it('given existing member when addMember with same user then throws MemberAlreadyExistsError', () => {
-        const project = Project.create({ description: 'Desc' }, 'u1');
+        const project = Project.create({ name: 'Test Project', description: 'Desc' }, 'u1');
 
         assert.throws(
             () => project.addMember(ProjectMember.create({ userId: 'u1', role: 'member' })),

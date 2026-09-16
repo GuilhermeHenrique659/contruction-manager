@@ -7,6 +7,7 @@ import { CreateProject } from '../application/CreateProject';
 import { ListVendors } from '../application/ListVendors';
 import { ListItems } from '../application/ListItems';
 import { ListProjects } from '../application/ListProjects';
+import { GetProjectById } from '../application/GetProjectById';
 import { DatabaseProjectRepository } from '../repository/DatabaseProjectRepository';
 
 export const projectRouter = express.Router();
@@ -29,11 +30,17 @@ projectRouter.get('/', authMiddleware, async (req, res) => {
     res.json(result);
 });
 
-projectRouter.post('/', authMiddleware, validateInput(z.object({ description: z.string() })), async (req, res) => {
+projectRouter.get('/:projectId', authMiddleware, async (req, res) => {
+    const useCase = new GetProjectById(db);
+    const result = await useCase.execute({ projectId: req.params.projectId, userId: (req as any).user.id });
+    return res.json(result);
+});
+
+projectRouter.post('/', authMiddleware, validateInput(z.object({ name: z.string(), description: z.string() })), async (req, res) => {
     const result = await db.transaction(async (tx) => {
         const repo = new DatabaseProjectRepository(tx);
         const useCase = new CreateProject(repo);
-        return await useCase.execute({ description: req.body.description, creatorUserId: (req as any).user.id });
+        return await useCase.execute({ name: req.body.name, description: req.body.description, creatorUserId: (req as any).user.id });
     });
     res.json(result);
 });

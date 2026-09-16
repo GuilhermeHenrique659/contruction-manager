@@ -4,6 +4,7 @@ import { MemberAlreadyExistsError } from './MemberAlreadyExistsError';
 
 type Props = {
   id: Id;
+  name: string;
   description: string;
   members: ProjectMember[];
 };
@@ -15,10 +16,11 @@ export class Project {
         this._props = props;
     }
 
-    static create(props: Omit<Props, 'id' | 'members'>, creatorUserId: string): Project {
+    static create(props: { name: string; description: string }, creatorUserId: string): Project {
         const members = [ProjectMember.create({ userId: creatorUserId, role: 'member' })];
         return new Project({
             id: Id.create(),
+            name: props.name,
             description: props.description,
             members,
         });
@@ -26,6 +28,10 @@ export class Project {
 
     get id(): string {
         return this._props.id.toString();
+    }
+
+    get name(): string {
+        return this._props.name;
     }
 
     get description(): string {

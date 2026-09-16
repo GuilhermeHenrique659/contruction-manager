@@ -18,7 +18,7 @@ describe('CreateItem', () => {
         const category = Category.create({ description: 'Cat 1' });
         await categoryRepo.add(category);
         
-        const project = Project.create({ description: 'Proj' }, 'u1');
+        const project = Project.create({ name: 'Test Project', description: 'Proj' }, 'u1');
         await projectRepo.add(project);
 
         const useCase = new CreateItem(itemRepo, projectRepo, categoryRepo);
@@ -47,7 +47,7 @@ describe('CreateItem', () => {
         const projectRepo = new FakeProjectRepository();
         const categoryRepo = new FakeCategoryRepository();
 
-        const project = Project.create({ description: 'Proj' }, 'u1');
+        const project = Project.create({ name: 'Test Project', description: 'Proj' }, 'u1');
         await projectRepo.add(project);
 
         const useCase = new CreateItem(itemRepo, projectRepo, categoryRepo);
