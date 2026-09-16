@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styles from './Navbar.module.css';
 import { Button } from '../../atoms';
+import { Logo } from '../../atoms/Logo/Logo';
 import { useTheme } from '../../../context/ThemeContext';
 
 export interface NavLink {
@@ -38,9 +39,7 @@ export function Navbar({
     <header className={styles.navbar}>
       <nav className={styles.navContainer} role="navigation" aria-label="Navegação principal">
         <a href={brandHref} className={styles.brand} onClick={closeMenu}>
-          <div className={styles.brandMark}>
-            <span>E</span>
-          </div>
+          <Logo size="md" />
           <div className={styles.brandText}>
             <span className={styles.brandName}>{brand}</span>
             <small className={styles.brandTagline}>SISTEMA DE GESTÃO DE OBRAS</small>
