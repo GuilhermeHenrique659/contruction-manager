@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styles from './Navbar.module.css';
 import { Button } from '../../atoms';
+import { useTheme } from '../../../context/ThemeContext';
 
 export interface NavLink {
   label: string;
@@ -20,7 +21,7 @@ export interface NavbarProps {
 }
 
 export function Navbar({
-  brand = 'Constructor Manager',
+  brand = 'ESTRUTURA',
   brandHref = '/',
   links = [],
   actions,
@@ -28,6 +29,7 @@ export function Navbar({
   onLogout,
 }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
@@ -36,10 +38,16 @@ export function Navbar({
     <header className={styles.navbar}>
       <nav className={styles.navContainer} role="navigation" aria-label="Navegação principal">
         <a href={brandHref} className={styles.brand} onClick={closeMenu}>
-          {brand}
+          <div className={styles.brandMark}>
+            <span>E</span>
+          </div>
+          <div className={styles.brandText}>
+            <span className={styles.brandName}>{brand}</span>
+            <small className={styles.brandTagline}>SISTEMA DE GESTÃO DE OBRAS</small>
+          </div>
         </a>
 
-        <div className={`${styles.navLinks} ${isMenuOpen ? styles.open : ''}`}>
+        <div className={`${styles.navLinks} ${isMenuOpen ? styles.open : ''}`} id="nav-links">
           <ul className={styles.linkList}>
             {links.map((link) => (
               <li key={link.href}>
@@ -51,6 +59,17 @@ export function Navbar({
           </ul>
 
           {actions && <div className={styles.actions}>{actions}</div>}
+
+          <button
+            className={styles.themeToggle}
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Alternar para tema claro' : 'Alternar para tema escuro'}
+            title={theme === 'dark' ? 'Tema escuro' : 'Tema claro'}
+          >
+            <span className={styles.themeKnob}>
+              {theme === 'dark' ? '☾' : '☀'}
+            </span>
+          </button>
 
           {user ? (
             <div className={styles.userMenu}>

@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import styles from './Modal.module.css';
-import { Button } from '../Button';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -93,7 +92,7 @@ export function Modal({
     >
       <div
         ref={modalRef}
-        className={`${styles.modal} ${styles[size]} styles.riveted`}
+        className={`${styles.modal} ${styles[size]} ${styles.riveted}`}
         tabIndex={-1}
       >
         <span className={styles['rv-bl']} />
