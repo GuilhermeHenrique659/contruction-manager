@@ -7,7 +7,7 @@
 .main {
   flex: 1;
   max-width: 1180px;
-  margin: 0 auto;
+  margin: 40px auto 0;
   padding: 0 28px 120px;
   width: 100%;
 }
@@ -65,6 +65,13 @@
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.section {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-cut);
+  padding: 32px;
 }
 
 .projectsSection {

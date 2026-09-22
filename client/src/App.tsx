@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Home } from './components/pages/Home';
 import { Login } from './components/pages/Login';
+import { ProjectItemList } from './components/pages/ProjectItemList/ProjectItemList';
 import { Navbar } from './components/organisms/Navbar';
 import { useAuth } from './hooks/useAuth';
 import './App.css';
@@ -22,13 +23,9 @@ function AppContent() {
 
   return (
     <div className="app">
-      <Navbar
-        brand="ESTRUTURA"
-        user={{ name: user.name }}
-        onLogout={logout}
-      />
+      <Navbar brand="ESTRUTURA" user={{ name: user.name }} onLogout={logout} />
       <main className="app-main">
-        <Home />
+        <Outlet />
       </main>
     </div>
   );
@@ -38,7 +35,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AppContent />} />
+        <Route element={<AppContent />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/projects/:projectId/itens" element={<ProjectItemList />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

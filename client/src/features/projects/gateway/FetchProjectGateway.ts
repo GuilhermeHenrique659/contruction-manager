@@ -1,5 +1,6 @@
 import { ProjectGateway } from './ProjectGateway';
 import { Project, CreateProjectInput } from '../model/ProjectModel';
+import { ProjectItem } from '../model/ProjectItem';
 
 const API_BASE = '/api/projects';
 
@@ -47,6 +48,18 @@ export class FetchProjectGateway implements ProjectGateway {
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || 'Erro ao criar projeto');
+    }
+
+    return response.json();
+  }
+
+  async listItems(projectId: string): Promise<ProjectItem[]> {
+    const response = await fetch(`${API_BASE}/${projectId}/items`, {
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new Error('Falha ao buscar itens');
     }
 
     return response.json();

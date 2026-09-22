@@ -17,7 +17,8 @@ export function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <header className={styles.header}>
+        <div className={styles.section}>
+          <header className={styles.header}>
           <div className={styles.headerLeft}>
             <span className={styles.eyebrow}>PAINEL DE CONTROLE</span>
             <h1 className={styles.title}>Projetos</h1>
@@ -32,7 +33,7 @@ export function Home() {
             <IconPlus size={18} />
             Novo Projeto
           </Button>
-        </header>
+          </header>
 
         <div className={styles.projectsSection}>
           {isLoading ? (
@@ -67,6 +68,7 @@ export function Home() {
           onSubmit={handleCreateProject}
           isLoading={isCreating}
         />
+        </div>
       </main>
     </div>
   );

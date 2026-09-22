@@ -44,7 +44,13 @@
 }
 
 @media (max-width: 640px) {
-  .card {
+.link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card {
     padding: 20px 16px;
   }
 
