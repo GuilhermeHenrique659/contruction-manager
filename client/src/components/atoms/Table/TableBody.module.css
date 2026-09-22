@@ -1,0 +1,8 @@
+.tbody td {
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-1);
+  vertical-align: middle;
+}
+.tbody tr:last-child td { border-bottom: none; }
+.tbody tr:hover { background: var(--bg-2); }

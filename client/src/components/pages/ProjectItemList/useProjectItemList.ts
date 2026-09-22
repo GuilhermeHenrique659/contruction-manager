@@ -1,3 +1,4 @@
+import { ProjectItem } from '../../../features/projects/model/ProjectItem';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ListProjectItems } from '../../../features/projects/application/ListProjectItems';
@@ -5,7 +6,7 @@ import { FetchProjectGateway } from '../../../features/projects/gateway/FetchPro
 
 export function useProjectItemList() {
   const { projectId } = useParams<{ projectId: string }>();
-  const [items, setItems] = useState<{ id: string; nome: string }[]>([]);
+  const [items, setItems] = useState<ProjectItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

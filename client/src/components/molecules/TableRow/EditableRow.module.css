@@ -1,0 +1,4 @@
+.num { font-family: var(--font-mono); color: var(--ink-0); }
+.itemName { color: var(--ink-0); font-weight: 600; font-size: 14px; outline: none; cursor: text; border-radius: 2px; padding: 3px 6px; margin: -3px -6px; display: inline-block; min-width: 16px; }
+.itemName:hover { background: var(--bg-3); }
+.itemName:focus { background: var(--bg-3); box-shadow: 0 0 0 1px var(--brass-500) inset; }
