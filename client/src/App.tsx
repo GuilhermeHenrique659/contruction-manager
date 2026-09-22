@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './components/pages/Home';
 import { Login } from './components/pages/Login';
 import { Navbar } from './components/organisms/Navbar';
@@ -34,7 +35,14 @@ function AppContent() {
 }
 
 function App() {
-  return <AppContent />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppContent />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

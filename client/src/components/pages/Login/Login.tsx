@@ -1,4 +1,5 @@
 import { useState, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 import { Button } from '../../atoms/Button/Button';
 import { Input } from '../../atoms/Input/Input';
@@ -6,6 +7,7 @@ import { Logo } from '../../atoms/Logo/Logo';
 import { useAuth } from '../../../hooks/useAuth';
 
 export function Login() {
+  const navigate = useNavigate();
   const { login, register, isLoading: authIsLoading } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
@@ -26,8 +28,10 @@ export function Login() {
           return;
         }
         await register(email, name);
+        navigate('/');
       } else {
         await login(email);
+        navigate('/');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro inesperado');
