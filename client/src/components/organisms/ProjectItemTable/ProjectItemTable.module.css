@@ -198,6 +198,19 @@
   background: var(--bg-1) !important;
 }
 
+.purchases { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+
+.purchaseRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: var(--bg-3); border: 1px solid var(--line-strong); border-radius: 8px; padding: 6px 10px; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+
+.purchaseInfo { color: var(--ink-0); }
+.purchaseInfo .desc { font-weight: 500; }
+.purchaseInfo .detail { color: var(--ink-2); font-size: 12px; }
+
+.removeBtn { padding: 2px 6px !important; line-height: 1; min-width: auto !important; }
+
+.addPurchaseBtn { border: 1px solid var(--line-strong); background: transparent; color: var(--ink-0); border-radius: 6px; padding: 7px 12px; font-size: 13px; cursor: pointer; }
+.addPurchaseBtn:hover { background: var(--ink-0); color: var(--paper, #fff); }
+
 .noBorderField:hover input,
 .noBorderField:hover select {
   background: var(--bg-2) !important;
