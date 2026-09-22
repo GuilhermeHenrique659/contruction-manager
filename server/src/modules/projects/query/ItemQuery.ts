@@ -21,7 +21,7 @@ export type ItemRow = {
 };
 
 export class ItemQuery {
-    constructor(private readonly db: NodePgDatabase) {}
+    constructor(private readonly db: NodePgDatabase) { }
 
     async findByProjectId(projectId: string): Promise<ItemRow[]> {
         const itemRows = await this.db.select({
@@ -34,6 +34,8 @@ export class ItemQuery {
             .from(items)
             .leftJoin(categories, eq(items.categoryId, categories.id))
             .where(eq(items.projectId, projectId));
+
+        if (itemRows.length === 0) return [];
 
         const itemIds = itemRows.map(i => i.id);
         const orderRows = await this.db.select({

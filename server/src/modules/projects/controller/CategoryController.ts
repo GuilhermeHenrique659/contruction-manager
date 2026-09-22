@@ -4,9 +4,16 @@ import { authMiddleware } from '../../../shared/infra/http/AuthMiddleware';
 import express from 'express';
 import { db } from '../../../shared/infra/db/client';
 import { CreateCategory } from '../application/CreateCategory';
+import { ListCategories } from '../application/ListCategories';
 import { DatabaseCategoryRepository } from '../repository/DatabaseCategoryRepository';
 
 export const categoryRouter = express.Router();
+
+categoryRouter.get('/', authMiddleware, async (req, res) => {
+    const useCase = new ListCategories();
+    const result = await useCase.execute();
+    res.json(result);
+});
 
 categoryRouter.post('/', authMiddleware, validateInput(z.object({
     description: z.string(),
