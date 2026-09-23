@@ -3,7 +3,7 @@ import { TableRow } from '../../atoms/Table/TableRow';
 import { Select } from '../../atoms/Input/Input';
 import styles from './EditableRow.module.css';
 
-export function EditableRow({ id, description, total, category, orders }: { id: number | string; description: string; total: number; category: { id: string; description: string }; orders: { id: string; quantity: number; price: number; status: string; purchasedAt: Date | null; vendor: { id: string; name: string; paymentDay: number | null; } }[] }) {
+export function EditableRow({ description, total, category, orders }: { description: string; total: number; category: { id: string; description: string }; orders: { id: string; quantity: number; price: number; status: string; purchasedAt: Date | null; vendor: { id: string; name: string; paymentDay: number | null; } }[] }) {
   return (
     <TableRow>
       <TableCell>

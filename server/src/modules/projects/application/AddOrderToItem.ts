@@ -5,6 +5,7 @@ import { Price } from '../domain/Price';
 import { Id } from '../../../shared/domain/Id';
 import type { ItemRepository } from '../repository/ItemRepository';
 import type { VendorRepository } from '../repository/VendorRepository';
+import { or } from 'drizzle-orm';
 
 type Input = {
     itemId: string;
@@ -44,7 +45,8 @@ export class AddOrderToItem {
             status: input.status,
             purchasedAt: input.purchasedAt,
         });
-
+        console.log(order);
+        
         item.addOrder(order);
         await this.itemRepo.update(item);
         return { orderId: order.id };

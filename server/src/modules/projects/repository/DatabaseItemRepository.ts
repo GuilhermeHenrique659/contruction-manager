@@ -74,7 +74,7 @@ export class DatabaseItemRepository implements ItemRepository {
                 vendorId: order.vendorId,
                 status: order.status,
                 purchasedAt: order.purchasedAt ? new Date(order.purchasedAt) : new Date(),
-            });
+            }).onConflictDoNothing();
         }
     }
 }

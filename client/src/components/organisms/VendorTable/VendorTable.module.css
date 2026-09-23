@@ -1,0 +1,31 @@
+.tableWrap {
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  overflow: hidden;
+  border-radius: var(--radius-cut);
+}
+
+.name {
+  color: var(--ink-0);
+  font-weight: 600;
+}
+
+.paymentDay {
+  font-family: var(--font-mono);
+  color: var(--ink-0);
+}
+
+.empty {
+  color: var(--ink-2);
+  font-style: italic;
+}
+
+.noBorderField input {
+  border: 1px solid transparent !important;
+  background: var(--bg-1) !important;
+}
+
+.noBorderField:hover input {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--line-strong) !important;
+}
