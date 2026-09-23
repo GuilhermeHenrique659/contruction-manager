@@ -6,11 +6,7 @@ import { projectRouter } from './modules/projects/controller/ProjectController';
 import { vendorRouter } from './modules/projects/controller/VendorController';
 import { itemRouter } from './modules/projects/controller/ItemController';
 import { categoryRouter } from './modules/projects/controller/CategoryController';
-import { DomainError } from './shared/domain/DomainError';
-import { ApplicationError } from './shared/domain/ApplicationError';
-import { AuthenticationError } from './modules/users/domain/AuthenticationError';
-import { PermissionError } from './shared/domain/PermissionError';
-import { InvalidPayloadError } from './shared/domain/InvalidPayloadError';
+import { mapErrorToHttp } from './shared/infra/http/MapErrorToHttp';
 
 export function createApp() {
     const app = express();
@@ -38,16 +34,8 @@ export function createApp() {
 
     app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
         logger.error(err);
-        if (err instanceof InvalidPayloadError) {
-            return res.status(400).json({ name: err.name, error: err.message });
-        }
-        if (err instanceof DomainError || err instanceof ApplicationError) {
-            return res.status(400).json({ name: err.name, error: err.message });
-        }
-        if (err instanceof AuthenticationError || err instanceof PermissionError) {
-            return res.status(403).json({ name: err.name, error: err.message });
-        }
-        return res.status(500).json({ name: err.name, error: err.message || 'Internal server error' });
+        const httpError = mapErrorToHttp(err);
+        return res.status(httpError.status).json(httpError.body);
     });
 
     return app;

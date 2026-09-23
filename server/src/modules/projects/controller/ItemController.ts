@@ -14,8 +14,8 @@ export const itemRouter = express.Router();
 
 itemRouter.post('/', authMiddleware, validateInput(z.object({
     description: z.string(),
-    categoryId: z.string(),
-    projectId: z.string(),
+    categoryId: z.string().uuid(),
+    projectId: z.string().uuid(),
 })), async (req, res) => {
     const result = await db.transaction(async (tx) => {
         const itemRepo = new DatabaseItemRepository(tx);
@@ -28,10 +28,10 @@ itemRouter.post('/', authMiddleware, validateInput(z.object({
 });
 
 itemRouter.post('/:itemId/orders', authMiddleware, validateInput(z.object({
-    itemId: z.string(),
+    itemId: z.string().uuid(),
     quantity: z.number(),
     price: z.number(),
-    vendorId: z.string(),
+    vendorId: z.string().uuid(),
     status: z.enum(['pending_payment', 'paid']).optional(),
     purchasedAt: z.string().optional(),
 })), async (req, res) => {

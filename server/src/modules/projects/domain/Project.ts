@@ -1,6 +1,6 @@
+import { DomainError } from '../../../shared/domain/DomainError';
 import { Id } from '../../../shared/domain/Id';
 import { ProjectMember } from './ProjectMember';
-import { MemberAlreadyExistsError } from './MemberAlreadyExistsError';
 
 type Props = {
   id: Id;
@@ -45,7 +45,7 @@ export class Project {
     addMember(member: ProjectMember): void {
         const exists = this._props.members.some((m) => m.userId === member.userId);
         if (exists) {
-            throw new MemberAlreadyExistsError(member.userId);
+            throw new DomainError(`Member ${member.userId} is already associated with this project`);
         }
         this._props.members.push(member);
     }

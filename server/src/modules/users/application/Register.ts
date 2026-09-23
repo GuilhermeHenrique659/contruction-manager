@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { EmailAlreadyExistsError } from '../domain/EmailAlreadyExistsError';
 import { User } from '../domain/User';
 import { JWT_SECRET } from '../../../shared/config/env';
+import { ApplicationError } from '../../../shared/domain/ApplicationError';
 import type { UserRepository } from '../repository/UserRepository';
 
 type Input = {
@@ -21,7 +21,7 @@ export class Register {
     async execute(input: Input): Promise<Output> {
         const existing = await this.userRepository.getByEmail(input.email);
         if (existing) {
-            throw new EmailAlreadyExistsError();
+            throw new ApplicationError('email already in use');
         }
 
         const user = User.create({

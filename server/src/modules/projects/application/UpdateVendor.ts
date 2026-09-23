@@ -1,4 +1,4 @@
-import { VendorNotFoundError } from './VendorNotFoundError';
+import { ApplicationError } from '../../../shared/domain/ApplicationError';
 import type { VendorRepository } from '../repository/VendorRepository';
 
 type Input = {
@@ -17,7 +17,7 @@ export class UpdateVendor {
     async execute(input: Input): Promise<Output> {
         const vendor = await this.repo.getById(input.id);
         if (!vendor) {
-            throw new VendorNotFoundError();
+            throw new ApplicationError('Vendor not found');
         }
 
         vendor.updateName(input.name);

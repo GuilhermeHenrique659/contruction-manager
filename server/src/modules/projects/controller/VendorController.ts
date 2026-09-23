@@ -9,7 +9,7 @@ import { DatabaseVendorRepository } from '../repository/DatabaseVendorRepository
 
 export const vendorRouter = express.Router();
 
-vendorRouter.post('/', authMiddleware, validateInput(z.object({ name: z.string(), paymentDay: z.number().nullable(), projectId: z.string() })), async (req, res) => {
+vendorRouter.post('/', authMiddleware, validateInput(z.object({ name: z.string(), paymentDay: z.number().nullable(), projectId: z.string().uuid() })), async (req, res) => {
     const result = await db.transaction(async (tx) => {
         const repo = new DatabaseVendorRepository(tx);
         const useCase = new CreateVendor(repo);
@@ -18,7 +18,7 @@ vendorRouter.post('/', authMiddleware, validateInput(z.object({ name: z.string()
     res.json(result);
 });
 
-vendorRouter.put('/:id', authMiddleware, validateInput(z.object({ id: z.string(), name: z.string().optional(), paymentDay: z.number().nullable().optional() })), async (req, res) => {
+vendorRouter.put('/:id', authMiddleware, validateInput(z.object({ id: z.string().uuid(), name: z.string().optional(), paymentDay: z.number().nullable().optional() })), async (req, res) => {
     const result = await db.transaction(async (tx) => {
         const repo = new DatabaseVendorRepository(tx);
         const useCase = new UpdateVendor(repo);

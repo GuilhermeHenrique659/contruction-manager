@@ -1,5 +1,5 @@
 import { Category } from '../domain/Category';
-import { CategoryAlreadyExistsError } from '../domain/CategoryAlreadyExistsError';
+import { ApplicationError } from '../../../shared/domain/ApplicationError';
 import type { CategoryRepository } from '../repository/CategoryRepository';
 
 type Input = {
@@ -16,7 +16,7 @@ export class CreateCategory {
     async execute(input: Input): Promise<Output> {
         const exists = await this.repo.hasByDescription(input.description);
         if (exists) {
-            throw new CategoryAlreadyExistsError(input.description);
+            throw new ApplicationError(`Category with description '${input.description}' already exists`);
         }
 
         const category = Category.create({ description: input.description });
