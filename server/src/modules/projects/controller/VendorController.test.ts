@@ -24,7 +24,7 @@ describe('Vendor endpoint', () => {
         const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Test User', email: 'vendor@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'Test Project' });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { name: 'Test Project', description: 'Test Project' });
         const projectId = projRes.body.id;
 
         const { status, body } = await fetchAppInst.post('/api/vendors/', { auth: generateTestToken(userId) }, { name: 'Teste Vendor', paymentDay: 15, projectId: projectId });
@@ -37,7 +37,7 @@ describe('Vendor endpoint', () => {
         const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Update User', email: 'vendorupdate@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'Update Project' });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { name: 'Update Project', description: 'Update Project' });
         const projectId = projRes.body.id;
 
         const createRes = await fetchAppInst.post('/api/vendors/', { auth: generateTestToken(userId) }, { name: 'Old Name', paymentDay: 10, projectId: projectId });

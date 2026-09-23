@@ -24,7 +24,7 @@ export class DatabaseItemRepository implements ItemRepository {
             description: row.description,
             categoryId: Id.fromString(row.categoryId),
             projectId: Id.fromString(row.projectId),
-            total: Price.createOrZero(row.total),
+            total: row.total ?? 0,
             orders: ordersRows.map(orderRow => new Order({
                 id: Id.fromString(orderRow.id),
                 itemId: Id.fromString(orderRow.itemId),

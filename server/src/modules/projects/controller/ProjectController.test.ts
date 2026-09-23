@@ -34,7 +34,7 @@ describe('Project vendors list', () => {
         const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'List User', email: 'list@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'List Project' });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { name: 'List Project', description: 'List Project' });
         const projectId = projRes.body.id;
 
         await fetchAppInst.post('/api/vendors/', { auth: generateTestToken(userId) }, { name: 'List Vendor', paymentDay: 5, projectId: projectId });
@@ -51,7 +51,7 @@ describe('Project list', () => {
         const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Member User', email: 'member@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'Project with members' });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { name: 'Project with members', description: 'Project with members' });
         const projectId = projRes.body.id;
 
         const { status, body } = await fetchAppInst.get('/api/projects/', { auth: generateTestToken(userId) });
@@ -67,9 +67,8 @@ describe('Project endpoint', () => {
         const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'create project User', email: 'create_project@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const { status, body } = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'Teste' });
+        const { status, body } = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { name: 'Teste', description: 'Teste' });
 
-        console.log('Response body:', body);
         assert.strictEqual(status, 200);
         assert.ok(body && body.id);
     });

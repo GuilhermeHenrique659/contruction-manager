@@ -24,7 +24,7 @@ describe('Item endpoint', () => {
         const userRes = await fetchAppInst.post('/api/users/register', {}, { name: 'Item User', email: 'item@test.com', password: '123456' });
         const userId = userRes.body.id;
 
-        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { description: 'Proj' });
+        const projRes = await fetchAppInst.post('/api/projects/', { auth: generateTestToken(userId) }, { name: 'Proj', description: 'Proj' });
         const projectId = projRes.body.id;
 
         const catRes = await fetchAppInst.post('/api/categories/', { auth: generateTestToken(userId) }, { description: 'Cat' });

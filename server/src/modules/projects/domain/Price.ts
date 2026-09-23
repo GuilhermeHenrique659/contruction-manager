@@ -7,10 +7,5 @@ export class Price {
         return new Price(value);
     }
 
-    static createOrZero(value?: number | null): Price {
-        if (!value) return new Price(0);
-        return Price.create(value);
-    }
-
     getValue(): number { return this.value; }
 }
