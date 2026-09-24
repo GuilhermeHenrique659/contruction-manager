@@ -9,29 +9,27 @@ import { TableHead } from '../../atoms/Table/TableHead';
 import { TableHeaderCell } from '../../atoms/Table/TableHeaderCell';
 import { TableRow } from '../../atoms/Table/TableRow';
 import { TableHeadBar } from '../../molecules/TableHeadBar/TableHeadBar';
+import { useForm } from '../../../hooks/useForm';
 import styles from './VendorTable.module.css';
 
 export function VendorTable({ vendors, onAdd }: { vendors: Vendor[]; onAdd: (input: { name: string; paymentDay: number | null }) => Promise<void> }) {
   const [showAdd, setShowAdd] = useState(false);
-  const [newName, setNewName] = useState('');
-  const [newPaymentDay, setNewPaymentDay] = useState('');
+  const { values, setField, reset } = useForm({ name: '', paymentDay: '' });
   const [isSaving, setIsSaving] = useState(false);
   const addRowRef = useRef<HTMLTableRowElement>(null);
 
   useEffect(() => {
     if (!showAdd) {
-      setNewName('');
-      setNewPaymentDay('');
+      reset();
     }
-  }, [showAdd]);
+  }, [showAdd, reset]);
 
   const handleSave = async () => {
-    if (!newName.trim() || isSaving) return;
-    const day = newPaymentDay.trim() === '' ? null : Number(newPaymentDay);
-    if (day !== null && (!Number.isInteger(day) || day < 0 || day > 31)) return;
+    if (isSaving) return;
+    const day = values.paymentDay.trim() === '' ? null : Number(values.paymentDay);
     setIsSaving(true);
     try {
-      await onAdd({ name: newName.trim(), paymentDay: day });
+      await onAdd({ name: values.name, paymentDay: day });
       setShowAdd(false);
     } catch {
       // mantém a linha aberta para o usuário corrigir
@@ -42,7 +40,7 @@ export function VendorTable({ vendors, onAdd }: { vendors: Vendor[]; onAdd: (inp
 
   const handleBlur = (e: React.FocusEvent) => {
     if (addRowRef.current && e.relatedTarget instanceof Node && addRowRef.current.contains(e.relatedTarget)) return;
-    if (!newName.trim()) {
+    if (!values.name.trim()) {
       setShowAdd(false);
       return;
     }
@@ -80,10 +78,10 @@ export function VendorTable({ vendors, onAdd }: { vendors: Vendor[]; onAdd: (inp
           {showAdd && (
             <TableRow ref={addRowRef}>
               <TableCell className={styles.noBorderField}>
-                <Input placeholder="Nome do fornecedor..." fullWidth value={newName} onChange={e => setNewName(e.target.value)} onBlur={handleBlur} onKeyDown={e => { if (e.key === 'Enter') handleSave(); }} />
+                <Input placeholder="Nome do fornecedor..." fullWidth value={values.name} onChange={e => setField('name', e.target.value)} onBlur={handleBlur} onKeyDown={e => { if (e.key === 'Enter') handleSave(); }} />
               </TableCell>
               <TableCell className={styles.noBorderField}>
-                <Input placeholder="Ex: 15" fullWidth value={newPaymentDay} onChange={e => setNewPaymentDay(e.target.value)} onBlur={handleBlur} onKeyDown={e => { if (e.key === 'Enter') handleSave(); }} />
+                <Input placeholder="Ex: 15" fullWidth value={values.paymentDay} onChange={e => setField('paymentDay', e.target.value)} onBlur={handleBlur} onKeyDown={e => { if (e.key === 'Enter') handleSave(); }} />
               </TableCell>
             </TableRow>
           )}

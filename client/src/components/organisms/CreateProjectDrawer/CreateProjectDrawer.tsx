@@ -1,8 +1,11 @@
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
 import styles from './CreateProjectDrawer.module.css';
 import { Button } from '../../atoms/Button/Button';
 import { Input } from '../../atoms/Input/Input';
 import { IconX } from '../../atoms/Icon/IconX';
+import { useForm } from '../../../hooks/useForm';
+
+import type { FormEvent } from 'react';
 
 interface CreateProjectDrawerProps {
   isOpen: boolean;
@@ -12,8 +15,7 @@ interface CreateProjectDrawerProps {
 }
 
 export function CreateProjectDrawer({ isOpen, onClose, onSubmit, isLoading }: CreateProjectDrawerProps) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const { values, setField, reset } = useForm({ name: '', description: '' });
   const [error, setError] = useState('');
 
   if (!isOpen) return null;
@@ -22,15 +24,9 @@ export function CreateProjectDrawer({ isOpen, onClose, onSubmit, isLoading }: Cr
     e.preventDefault();
     setError('');
 
-    if (!name.trim()) {
-      setError('Nome do projeto é obrigatório');
-      return;
-    }
-
     try {
-      await onSubmit(name, description);
-      setName('');
-      setDescription('');
+      await onSubmit(values.name, values.description);
+      reset();
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar projeto');
@@ -63,8 +59,8 @@ export function CreateProjectDrawer({ isOpen, onClose, onSubmit, isLoading }: Cr
           <Input
             label="Nome do projeto"
             type="text"
-            value={name}
-            onChange={e => setName(e.target.value)}
+            value={values.name}
+            onChange={e => setField('name', e.target.value)}
             placeholder="Ex: Residencial Alpha"
             fullWidth
             required
@@ -75,8 +71,8 @@ export function CreateProjectDrawer({ isOpen, onClose, onSubmit, isLoading }: Cr
           <Input
             label="Descrição (opcional)"
             type="text"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
+            value={values.description}
+            onChange={e => setField('description', e.target.value)}
             placeholder="Detalhes do projeto..."
             fullWidth
             disabled={isLoading}

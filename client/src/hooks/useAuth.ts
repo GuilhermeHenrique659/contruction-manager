@@ -1,43 +1,37 @@
 import { useState, useCallback } from 'react';
-import { AuthState, createInitialAuthState, isAuthenticated } from '../features/auth/model/AuthModel';
+import { AUTH_KEY, AuthState, createInitialAuthState, isAuthenticated } from '../features/auth/model/AuthModel';
 import { Login } from '../features/auth/application/Login';
 import { Register } from '../features/auth/application/Register';
 import { FetchAuthGateway } from '../features/auth/gateway/FetchAuthGateway';
+import LocalStorage from '../features/auth/storage/LocalStorage';
 
-const TOKEN_KEY = 'auth_token';
-const USER_KEY = 'auth_user';
 
 const gateway = new FetchAuthGateway();
-const loginUseCase = new Login(gateway);
-const registerUseCase = new Register(gateway);
+const loginUseCase = new Login(gateway, new LocalStorage());
+const registerUseCase = new Register(gateway, new LocalStorage());
 
 function loadStoredAuth(): AuthState {
   if (typeof window === 'undefined') return createInitialAuthState();
 
-  const token = localStorage.getItem(TOKEN_KEY);
-  const userStr = localStorage.getItem(USER_KEY);
+  const token = localStorage.getItem(AUTH_KEY.token);
+  const userStr = localStorage.getItem(AUTH_KEY.user);
 
   if (token && userStr) {
     try {
       const user = JSON.parse(userStr);
       return { status: 'authenticated', user };
     } catch {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(USER_KEY);
+      localStorage.removeItem(AUTH_KEY.token);
+      localStorage.removeItem(AUTH_KEY.user);
     }
   }
 
   return createInitialAuthState();
 }
 
-function persistAuth(user: { id: string; email: string; name: string }, token: string): void {
-  localStorage.setItem(TOKEN_KEY, token);
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
-}
-
 function clearAuth(): void {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem(AUTH_KEY.token);
+  localStorage.removeItem(AUTH_KEY.user);
 }
 
 export function useAuth() {
@@ -48,8 +42,7 @@ export function useAuth() {
     setIsLoading(true);
     setAuthState({ status: 'authenticating' });
     try {
-      const { user, token } = await loginUseCase.execute({ email });
-      persistAuth(user, token);
+      const { user } = await loginUseCase.execute({ email });
       setAuthState({ status: 'authenticated', user });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro inesperado';
@@ -64,8 +57,7 @@ export function useAuth() {
     setIsLoading(true);
     setAuthState({ status: 'authenticating' });
     try {
-      const { user, token } = await registerUseCase.execute({ email, name });
-      persistAuth(user, token);
+      const { user } = await registerUseCase.execute({ email, name });
       setAuthState({ status: 'authenticated', user });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro inesperado';

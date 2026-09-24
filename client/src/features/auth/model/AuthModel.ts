@@ -17,3 +17,11 @@ export function createInitialAuthState(): AuthState {
 export function isAuthenticated(state: AuthState): state is { status: 'authenticated'; user: User } {
   return state.status === 'authenticated';
 }
+
+const TOKEN_KEY = 'auth_token';
+const USER_KEY = 'auth_user';
+
+export const AUTH_KEY = {
+  token: TOKEN_KEY,
+  user: USER_KEY,
+};

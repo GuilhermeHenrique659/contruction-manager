@@ -9,6 +9,7 @@ import { DatabaseItemRepository } from '../repository/DatabaseItemRepository';
 import { DatabaseProjectRepository } from '../repository/DatabaseProjectRepository';
 import { DatabaseCategoryRepository } from '../repository/DatabaseCategoryRepository';
 import { DatabaseVendorRepository } from '../repository/DatabaseVendorRepository';
+import { Authorizer } from '../../users/application/Authorizer';
 
 export const itemRouter = express.Router();
 
@@ -21,8 +22,8 @@ itemRouter.post('/', authMiddleware, validateInput(z.object({
         const itemRepo = new DatabaseItemRepository(tx);
         const projectRepo = new DatabaseProjectRepository(tx);
         const categoryRepo = new DatabaseCategoryRepository(tx);
-        const useCase = new CreateItem(itemRepo, projectRepo, categoryRepo);
-        return await useCase.execute(req.body);
+        const useCase = new Authorizer(new CreateItem(itemRepo, projectRepo, categoryRepo), db);
+        return await useCase.execute({ userId: (req as any).user.id, ...req.body }, ['item:create']);
     });
     res.json(result);
 });

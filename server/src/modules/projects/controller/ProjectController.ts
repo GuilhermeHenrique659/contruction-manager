@@ -9,6 +9,7 @@ import { ListItems } from '../application/ListItems';
 import { ListProjects } from '../application/ListProjects';
 import { GetProjectById } from '../application/GetProjectById';
 import { DatabaseProjectRepository } from '../repository/DatabaseProjectRepository';
+import { Authorizer } from '../../users/application/Authorizer';
 
 export const projectRouter = express.Router();
 
@@ -31,8 +32,8 @@ projectRouter.get('/', authMiddleware, async (req, res) => {
 });
 
 projectRouter.get('/:projectId', authMiddleware, async (req, res) => {
-    const useCase = new GetProjectById(db);
-    const result = await useCase.execute({ projectId: req.params.projectId, userId: (req as any).user.id });
+    const useCase = new Authorizer(new GetProjectById(db), db);
+    const result = await useCase.execute({ projectId: req.params.projectId, userId: (req as any).user.id }, ['project:read']);
     return res.json(result);
 });
 

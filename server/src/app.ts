@@ -1,20 +1,17 @@
 import express from 'express';
 import cors from 'cors';
-import pino from 'pino';
 import { userRouter } from './modules/users/controller/UserController';
 import { projectRouter } from './modules/projects/controller/ProjectController';
 import { vendorRouter } from './modules/projects/controller/VendorController';
 import { itemRouter } from './modules/projects/controller/ItemController';
 import { categoryRouter } from './modules/projects/controller/CategoryController';
 import { mapErrorToHttp } from './shared/infra/http/MapErrorToHttp';
+import { logger } from './shared/infra/log/Logger';
 
 export function createApp() {
     const app = express();
     app.use(cors());
     app.use(express.json());
-
-    const logger = pino({ level: 'info' }, pino.transport({ target: 'pino-pretty', options: { colorize: true } }));
-
     app.use((req, _res, next) => {
         logger.info(`${req.method} ${req.path}`);
         next();
@@ -33,7 +30,7 @@ export function createApp() {
     }
 
     app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-        logger.error(err);
+        logger.error(err, "Error occurred during request processing");
         const httpError = mapErrorToHttp(err);
         return res.status(httpError.status).json(httpError.body);
     });

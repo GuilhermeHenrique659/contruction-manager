@@ -4,10 +4,12 @@ import type { ItemRepository } from '../repository/ItemRepository';
 import type { ProjectRepository } from '../repository/ProjectRepository';
 import type { CategoryRepository } from '../repository/CategoryRepository';
 import { ApplicationError } from '../../../shared/domain/ApplicationError';
+import { Authorizable } from '../../users/application/Authorizer';
 
 type Input = {
   description: string;
   categoryId: string;
+  userId: string;
   projectId: string;
 };
 
@@ -15,7 +17,7 @@ type Output = {
   id: string;
 };
 
-export class CreateItem {
+export class CreateItem implements Authorizable<Input, Output> {
     constructor(
     private readonly itemRepo: ItemRepository,
     private readonly projectRepo: ProjectRepository,

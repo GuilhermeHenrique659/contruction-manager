@@ -1,17 +1,19 @@
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 import { Button } from '../../atoms/Button/Button';
 import { Input } from '../../atoms/Input/Input';
 import { Logo } from '../../atoms/Logo/Logo';
 import { useAuth } from '../../../hooks/useAuth';
+import { useForm } from '../../../hooks/useForm';
+
+import type { FormEvent } from 'react';
 
 export function Login() {
   const navigate = useNavigate();
   const { login, register, isLoading: authIsLoading } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const { values, setField } = useForm({ email: '', name: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,17 +24,11 @@ export function Login() {
 
     try {
       if (isRegister) {
-        if (!name.trim()) {
-          setError('Nome é obrigatório');
-          setIsLoading(false);
-          return;
-        }
-        await register(email, name);
-        navigate('/');
+        await register(values.email, values.name);
       } else {
-        await login(email);
-        navigate('/');
+        await login(values.email);
       }
+      navigate('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro inesperado');
     } finally {
@@ -43,7 +39,7 @@ export function Login() {
   const toggleMode = () => {
     setIsRegister(prev => !prev);
     setError('');
-    setName('');
+    setField('name', '');
   };
 
   return (
@@ -67,11 +63,10 @@ export function Login() {
           <Input
             label="Email"
             type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            value={values.email}
+            onChange={e => setField('email', e.target.value)}
             placeholder="seu@email.com"
             fullWidth
-            required
             autoComplete="email"
             autoFocus
           />
@@ -80,11 +75,10 @@ export function Login() {
             <Input
               label="Nome"
               type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
+              value={values.name}
+              onChange={e => setField('name', e.target.value)}
               placeholder="Seu nome completo"
               fullWidth
-              required
               autoComplete="name"
             />
           )}

@@ -3,6 +3,7 @@ import { users } from '../../../shared/infra/db/schema/users';
 import { and, eq, inArray } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { ApplicationError } from '../../../shared/domain/ApplicationError';
+import { Authorizable } from '../../users/application/Authorizer';
 
 export type Input = {
     projectId: string;
@@ -22,7 +23,7 @@ export type Output = {
     members: MemberOutput[];
 };
 
-export class GetProjectById {
+export class GetProjectById implements Authorizable<Input, Output> {
     constructor(private readonly db: NodePgDatabase) { }
 
     async execute(input: Input): Promise<Output> {
