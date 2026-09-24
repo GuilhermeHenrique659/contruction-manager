@@ -81,7 +81,7 @@ export class FetchProjectGateway implements ProjectGateway {
     return response.json();
   }
 
-  async addOrderToItem(input: { itemId: string; quantity: number; price: number; vendorId: string; status?: string; purchasedAt?: string }): Promise<{ orderId: string }> {
+  async addOrderToItem(input: { itemId: string; projectId: string; quantity: number; price: number; vendorId: string; status?: string; purchasedAt?: string }): Promise<{ orderId: string }> {
     const { itemId, ...body } = input;
     const response = await fetch(`/api/items/${itemId}/orders`, {
       method: 'POST',

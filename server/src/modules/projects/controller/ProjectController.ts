@@ -14,14 +14,14 @@ import { Authorizer } from '../../users/application/Authorizer';
 export const projectRouter = express.Router();
 
 projectRouter.get('/:projectId/vendors', authMiddleware, async (req, res) => {
-    const useCase = new ListVendors(db);
-    const result = await useCase.execute({ projectId: req.params.projectId, name: req.query.name as string | undefined });
+    const useCase = new Authorizer(new ListVendors(db), db);
+    const result = await useCase.execute({ projectId: req.params.projectId, userId: (req as any).user.id, name: req.query.name as string | undefined }, ['vendor:read']);
     res.json(result);
 });
 
 projectRouter.get('/:projectId/items', authMiddleware, async (req, res) => {
-    const useCase = new ListItems(db);
-    const result = await useCase.execute({ projectId: req.params.projectId });
+    const useCase = new Authorizer(new ListItems(db), db);
+    const result = await useCase.execute({ projectId: req.params.projectId, userId: (req as any).user.id }, ['item:read']);
     res.json(result);
 });
 

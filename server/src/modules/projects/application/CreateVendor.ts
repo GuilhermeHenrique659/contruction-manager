@@ -2,18 +2,20 @@ import { Id } from '../../../shared/domain/Id';
 import { Vendor } from '../domain/Vendor';
 import { DayOfMonth } from '../domain/DayOfMonth';
 import type { VendorRepository } from '../repository/VendorRepository';
+import { Authorizable } from '../../users/application/Authorizer';
 
 type Input = {
   name: string;
   paymentDay: number | null;
   projectId: string;
+  userId: string;
 };
 
 type Output = {
   id: string;
 };
 
-export class CreateVendor {
+export class CreateVendor implements Authorizable<Input, Output> {
     constructor(private readonly repo: VendorRepository) {}
 
     async execute(input: Input): Promise<Output> {

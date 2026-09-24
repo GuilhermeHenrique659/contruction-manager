@@ -1,9 +1,11 @@
 import { vendors } from '../../../shared/infra/db/schema/projects';
 import { eq, and, like } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { Authorizable } from '../../users/application/Authorizer';
 
 export type Input = {
     projectId: string;
+    userId: string;
     name?: string;
 };
 
@@ -14,7 +16,7 @@ export type Output = {
     projectId: string;
 }[];
 
-export class ListVendors {
+export class ListVendors implements Authorizable<Input, Output> {
     constructor(private readonly db: NodePgDatabase) {}
 
     async execute(input: Input): Promise<Output> {

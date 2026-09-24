@@ -3,7 +3,7 @@ import { Quantity } from '../model/Quantity';
 import { UnitPrice } from '../model/UnitPrice';
 import { VendorId } from '../model/VendorId';
 
-type Input = { itemId: string; quantity: number; price: number; vendorId: string; status?: string; purchasedAt?: string };
+type Input = { itemId: string; projectId: string; quantity: number; price: number; vendorId: string; status?: string; purchasedAt?: string };
 type Output = { orderId: string };
 
 export class AddOrderToItem {

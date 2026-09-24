@@ -8,7 +8,7 @@ export interface ProjectGateway {
   getById(id: string): Promise<Project>;
   listItems(projectId: string): Promise<ProjectItem[]>;
   createItem(input: { description: string; categoryId: string; projectId: string }): Promise<{ id: string }>;
-  addOrderToItem(input: { itemId: string; quantity: number; price: number; vendorId: string; status?: string; purchasedAt?: string }): Promise<{ orderId: string }>;
+  addOrderToItem(input: { itemId: string; projectId: string; quantity: number; price: number; vendorId: string; status?: string; purchasedAt?: string }): Promise<{ orderId: string }>;
   listVendors(projectId: string): Promise<Vendor[]>;
   createVendor(input: { name: string; paymentDay: number | null; projectId: string }): Promise<{ id: string }>;
 }

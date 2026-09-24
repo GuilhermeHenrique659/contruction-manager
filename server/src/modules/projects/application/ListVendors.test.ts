@@ -18,9 +18,9 @@ describe('ListVendors', () => {
         const projectResult = await new CreateProject(projectRepo).execute({ name: 'Test Project', description: 'Proj', creatorUserId: userResult.id });
 
         const vendorRepo = new DatabaseVendorRepository(db);
-        await new CreateVendor(vendorRepo).execute({ name: 'Vendor A', paymentDay: 10, projectId: projectResult.id });
+        await new CreateVendor(vendorRepo).execute({ name: 'Vendor A', paymentDay: 10, projectId: projectResult.id, userId: userResult.id });
 
-        const result = await new ListVendors(db).execute({ projectId: projectResult.id });
+        const result = await new ListVendors(db).execute({ projectId: projectResult.id, userId: userResult.id });
         assert.strictEqual(Array.isArray(result), true);
         assert.strictEqual(result.length >= 1, true);
     });
@@ -33,9 +33,9 @@ describe('ListVendors', () => {
         const projectResult = await new CreateProject(projectRepo).execute({ name: 'Test Project 2', description: 'Proj2', creatorUserId: userResult.id });
 
         const vendorRepo = new DatabaseVendorRepository(db);
-        await new CreateVendor(vendorRepo).execute({ name: 'Vendor B', paymentDay: 5, projectId: projectResult.id });
+        await new CreateVendor(vendorRepo).execute({ name: 'Vendor B', paymentDay: 5, projectId: projectResult.id, userId: userResult.id });
 
-        const result = await new ListVendors(db).execute({ projectId: projectResult.id, name: 'B' });
+        const result = await new ListVendors(db).execute({ projectId: projectResult.id, userId: userResult.id, name: 'B' });
         assert.strictEqual(Array.isArray(result), true);
     });
 });

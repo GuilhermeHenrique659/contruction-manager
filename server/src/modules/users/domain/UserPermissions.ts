@@ -15,6 +15,8 @@ userPermissions.set('item:read', ['admin', 'member']);
 userPermissions.set('item:update', ['admin', 'member']);
 userPermissions.set('item:delete', ['admin', 'member']);
 
+userPermissions.set('order:create', ['admin', 'member']);
+
 userPermissions.set('category:create', ['admin']);
 userPermissions.set('category:read', ['admin']);
 userPermissions.set('category:update', ['admin']);

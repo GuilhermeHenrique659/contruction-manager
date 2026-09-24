@@ -30,6 +30,7 @@ itemRouter.post('/', authMiddleware, validateInput(z.object({
 
 itemRouter.post('/:itemId/orders', authMiddleware, validateInput(z.object({
     itemId: z.string().uuid(),
+    projectId: z.string().uuid(),
     quantity: z.number(),
     price: z.number(),
     vendorId: z.string().uuid(),
@@ -39,11 +40,12 @@ itemRouter.post('/:itemId/orders', authMiddleware, validateInput(z.object({
     const result = await db.transaction(async (tx) => {
         const itemRepo = new DatabaseItemRepository(tx);
         const vendorRepo = new DatabaseVendorRepository(tx);
-        const useCase = new AddOrderToItem(itemRepo, vendorRepo);
+        const useCase = new Authorizer(new AddOrderToItem(itemRepo, vendorRepo), db);
         return await useCase.execute({
             ...req.body,
             itemId: req.params.itemId,
-        });
+            userId: (req as any).user.id,
+        }, ['order:create']);
     });
     res.json(result);
 });
